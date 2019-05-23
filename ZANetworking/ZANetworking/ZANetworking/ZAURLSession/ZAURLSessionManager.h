@@ -7,15 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ZADownloadPriority.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ZAURLSessionManager : NSObject
+@interface ZAURLSessionManager : NSObject <NSURLSessionDownloadDelegate>
 
 + (instancetype)sharedManager;
 
-- (NSString *)downloadTaskFromURLString:(NSString *)urlString
-                                headers:(NSDictionary *)header;
+- (nonnull NSString *)downloadTaskFromURLString:(NSString *)urlString
+                                headers:(NSDictionary *)header
+                               priority:(ZADownloadPriority)priority;
+
+- (void)resumeDownloadTaskWithIdentifier:(NSString *)identifier;
+- (void)pauseDownloadTaskWithIdentifier:(NSString *)identifier;
+- (void)cancelDownloadTaskWithIdentifier:(NSString *)identifier;
 
 @end
 

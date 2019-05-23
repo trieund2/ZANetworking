@@ -43,6 +43,8 @@
 		A1346B6F2296A1E6009E73B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A1346B7C2296A5A7009E73B7 /* ZAURLSessionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZAURLSessionManager.h; sourceTree = "<group>"; };
 		A1346B7D2296A5A7009E73B7 /* ZAURLSessionManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZAURLSessionManager.m; sourceTree = "<group>"; };
+		A1346B832296A7C3009E73B7 /* ZADownloadPriority.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZADownloadPriority.h; sourceTree = "<group>"; };
+		A1346B842296AAE5009E73B7 /* ZANetworking.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZANetworking.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +128,7 @@
 		A1346B7A2296A263009E73B7 /* ZANetworking */ = {
 			isa = PBXGroup;
 			children = (
+				A1346B842296AAE5009E73B7 /* ZANetworking.h */,
 				A1346B7F2296A69E009E73B7 /* ZACore */,
 				A1346B7B2296A26C009E73B7 /* ZAURLSession */,
 			);
@@ -144,6 +147,7 @@
 		A1346B7F2296A69E009E73B7 /* ZACore */ = {
 			isa = PBXGroup;
 			children = (
+				A1346B832296A7C3009E73B7 /* ZADownloadPriority.h */,
 			);
 			path = ZACore;
 			sourceTree = "<group>";
