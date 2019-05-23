@@ -81,15 +81,13 @@
 		A1346B532296A1E5009E73B7 /* ZANetworking */ = {
 			isa = PBXGroup;
 			children = (
-				A1346B542296A1E5009E73B7 /* AppDelegate.h */,
-				A1346B552296A1E5009E73B7 /* AppDelegate.m */,
+				A1346B7A2296A263009E73B7 /* ZANetworking */,
+				A1346B782296A226009E73B7 /* Supports */,
+				A1346B792296A245009E73B7 /* AppDelegate */,
 				A1346B572296A1E5009E73B7 /* ViewController.h */,
 				A1346B582296A1E5009E73B7 /* ViewController.m */,
 				A1346B5A2296A1E5009E73B7 /* Main.storyboard */,
-				A1346B5D2296A1E6009E73B7 /* Assets.xcassets */,
 				A1346B5F2296A1E6009E73B7 /* LaunchScreen.storyboard */,
-				A1346B622296A1E6009E73B7 /* Info.plist */,
-				A1346B632296A1E6009E73B7 /* main.m */,
 			);
 			path = ZANetworking;
 			sourceTree = "<group>";
@@ -101,6 +99,40 @@
 				A1346B6F2296A1E6009E73B7 /* Info.plist */,
 			);
 			path = ZANetworkingTests;
+			sourceTree = "<group>";
+		};
+		A1346B782296A226009E73B7 /* Supports */ = {
+			isa = PBXGroup;
+			children = (
+				A1346B632296A1E6009E73B7 /* main.m */,
+				A1346B5D2296A1E6009E73B7 /* Assets.xcassets */,
+				A1346B622296A1E6009E73B7 /* Info.plist */,
+			);
+			path = Supports;
+			sourceTree = "<group>";
+		};
+		A1346B792296A245009E73B7 /* AppDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				A1346B542296A1E5009E73B7 /* AppDelegate.h */,
+				A1346B552296A1E5009E73B7 /* AppDelegate.m */,
+			);
+			path = AppDelegate;
+			sourceTree = "<group>";
+		};
+		A1346B7A2296A263009E73B7 /* ZANetworking */ = {
+			isa = PBXGroup;
+			children = (
+				A1346B7B2296A26C009E73B7 /* NSURLSession */,
+			);
+			path = ZANetworking;
+			sourceTree = "<group>";
+		};
+		A1346B7B2296A26C009E73B7 /* NSURLSession */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = NSURLSession;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -365,7 +397,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = DAA47P5N57;
-				INFOPLIST_FILE = ZANetworking/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/ZANetworking/Supports/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -382,7 +414,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = DAA47P5N57;
-				INFOPLIST_FILE = ZANetworking/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/ZANetworking/Supports/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
