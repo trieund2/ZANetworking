@@ -14,6 +14,7 @@
 		A1346B612296A1E6009E73B7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A1346B5F2296A1E6009E73B7 /* LaunchScreen.storyboard */; };
 		A1346B642296A1E6009E73B7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A1346B632296A1E6009E73B7 /* main.m */; };
 		A1346B6E2296A1E6009E73B7 /* ZANetworkingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A1346B6D2296A1E6009E73B7 /* ZANetworkingTests.m */; };
+		A1346B7E2296A5A7009E73B7 /* ZAURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A1346B7D2296A5A7009E73B7 /* ZAURLSessionManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +41,8 @@
 		A1346B692296A1E6009E73B7 /* ZANetworkingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZANetworkingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1346B6D2296A1E6009E73B7 /* ZANetworkingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZANetworkingTests.m; sourceTree = "<group>"; };
 		A1346B6F2296A1E6009E73B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A1346B7C2296A5A7009E73B7 /* ZAURLSessionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZAURLSessionManager.h; sourceTree = "<group>"; };
+		A1346B7D2296A5A7009E73B7 /* ZAURLSessionManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZAURLSessionManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,16 +126,26 @@
 		A1346B7A2296A263009E73B7 /* ZANetworking */ = {
 			isa = PBXGroup;
 			children = (
-				A1346B7B2296A26C009E73B7 /* NSURLSession */,
+				A1346B7F2296A69E009E73B7 /* ZACore */,
+				A1346B7B2296A26C009E73B7 /* ZAURLSession */,
 			);
 			path = ZANetworking;
 			sourceTree = "<group>";
 		};
-		A1346B7B2296A26C009E73B7 /* NSURLSession */ = {
+		A1346B7B2296A26C009E73B7 /* ZAURLSession */ = {
+			isa = PBXGroup;
+			children = (
+				A1346B7C2296A5A7009E73B7 /* ZAURLSessionManager.h */,
+				A1346B7D2296A5A7009E73B7 /* ZAURLSessionManager.m */,
+			);
+			path = ZAURLSession;
+			sourceTree = "<group>";
+		};
+		A1346B7F2296A69E009E73B7 /* ZACore */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			path = NSURLSession;
+			path = ZACore;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -236,6 +249,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1346B592296A1E5009E73B7 /* ViewController.m in Sources */,
+				A1346B7E2296A5A7009E73B7 /* ZAURLSessionManager.m in Sources */,
 				A1346B642296A1E6009E73B7 /* main.m in Sources */,
 				A1346B562296A1E5009E73B7 /* AppDelegate.m in Sources */,
 			);
