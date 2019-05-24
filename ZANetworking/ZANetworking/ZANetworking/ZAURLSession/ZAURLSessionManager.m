@@ -9,6 +9,7 @@
 #import "ZAURLSessionManager.h"
 #import "ZAURLSessionTaskInfo.h"
 #import "NSURL+URIEquivalence.h"
+#import "ProtectorObject.h"
 
 #pragma mark - Queue Helper
 
@@ -34,10 +35,13 @@ static void url_session_manager_create_task_safely(dispatch_block_t _Nonnull blo
 
 @interface ZAURLSessionManager ()
 @property (readonly, nonatomic) NSURLSession *session;
-@property (readonly, nonatomic) dispatch_queue_t rootQueue;
+@property (readonly, nonatomic) dispatch_queue_t root_queue;
 @property (readonly, nonatomic) NSOperationQueue *sessionDelegateQueue;
-@property (readonly, nonatomic) NSMutableDictionary *taskIdentifierKeyedByRequestIdentifier;
-@property (readonly, nonatomic) NSMutableDictionary *taskInfoKeyedByTaskIdentifier;
+@property (readonly, nonatomic) NSMutableDictionary *requestIdToTaskId;
+@property (readonly, nonatomic) NSMutableDictionary *taskIdToTaskInfo;
+@property (readonly, nonatomic) ProtectorObject<NSMutableDictionary<NSNumber*, ZAURLSessionTaskInfo*> *> *taskIdToTaskInfoProtector;
+
+@property ProtectorObject<NSMutableDictionary *> *protectorArray;
 @end
 
 #pragma mark -
@@ -61,11 +65,12 @@ static void url_session_manager_create_task_safely(dispatch_block_t _Nonnull blo
 {
     self = [super init];
     if (self) {
-        _rootQueue = dispatch_queue_create("com.za.zanetworking.session.manager.rootqueue", DISPATCH_QUEUE_SERIAL);
+        _root_queue = dispatch_queue_create("com.za.zanetworking.session.manager.rootqueue", DISPATCH_QUEUE_SERIAL);
         _sessionDelegateQueue = [[NSOperationQueue alloc] init];
         _sessionDelegateQueue.maxConcurrentOperationCount = 1;
-        _taskInfoKeyedByTaskIdentifier = [[NSMutableDictionary alloc] init];
-        _taskIdentifierKeyedByRequestIdentifier = [[NSMutableDictionary alloc] init];
+        _taskIdToTaskInfo = [[NSMutableDictionary alloc] init];
+        _requestIdToTaskId = [[NSMutableDictionary alloc] init];
+        _taskIdToTaskInfoProtector = [[ProtectorObject alloc] initFromObject:[[NSMutableDictionary alloc] init]];
         _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]
                                                  delegate:self delegateQueue:_sessionDelegateQueue];
     }
@@ -100,11 +105,10 @@ static void url_session_manager_create_task_safely(dispatch_block_t _Nonnull blo
         if (!downloadTask) {
             downloadTask = [weakSelf.session downloadTaskWithRequest:request];
             ZAURLSessionTaskInfo *taskInfo = [[ZAURLSessionTaskInfo alloc] initWithDownloadTask:downloadTask taskRequest:taskRequest];
-            weakSelf.taskInfoKeyedByTaskIdentifier[@(downloadTask.taskIdentifier)] = taskInfo;
+            [weakSelf performAddTaskInfo:taskInfo];
             [downloadTask resume];
         }
-        
-        weakSelf.taskIdentifierKeyedByRequestIdentifier[taskRequest.identifier] = [NSNumber numberWithInteger:downloadTask.taskIdentifier];
+        weakSelf.requestIdToTaskId[taskRequest.identifier] = [NSNumber numberWithInteger:downloadTask.taskIdentifier];
     });
     
     return taskRequest.identifier;
@@ -113,7 +117,7 @@ static void url_session_manager_create_task_safely(dispatch_block_t _Nonnull blo
 - (void)resumeDownloadTaskWithIdentifier:(NSString *)identifier {
     if (!identifier) { return; }
     
-    ZAURLSessionTaskInfo *taskInfo = self.taskInfoKeyedByTaskIdentifier[identifier];
+    ZAURLSessionTaskInfo *taskInfo = self.taskIdToTaskInfo[identifier];
     
     if (!taskInfo) { return; }
     
@@ -126,9 +130,9 @@ static void url_session_manager_create_task_safely(dispatch_block_t _Nonnull blo
     
     NSURLSessionDownloadTask *resumeDownloadTask = [self.session downloadTaskWithResumeData:taskInfo.receivedData];
     [taskInfo resumeDownloadTaskByIdentifier:identifier];
-    self.taskIdentifierKeyedByRequestIdentifier[identifier] = [NSNumber numberWithInteger:resumeDownloadTask.taskIdentifier];
+    self.requestIdToTaskId[identifier] = [NSNumber numberWithInteger:resumeDownloadTask.taskIdentifier];
     ZAURLSessionTaskInfo *resumeTaskInfo = [[ZAURLSessionTaskInfo alloc] initWithDownloadTask:resumeDownloadTask taskRequest:resumeTaskRequest];
-    self.taskInfoKeyedByTaskIdentifier[@(resumeDownloadTask.taskIdentifier)] = resumeTaskInfo;
+    self.taskIdToTaskInfo[@(resumeDownloadTask.taskIdentifier)] = resumeTaskInfo;
 }
 
 - (void)pauseDownloadTaskWithIdentifier:(NSString *)identifier {
@@ -139,25 +143,39 @@ static void url_session_manager_create_task_safely(dispatch_block_t _Nonnull blo
     
 }
 
+#pragma mark - Helper
+
+- (void)performAddTaskInfo:(ZAURLSessionTaskInfo *)taskInfo {
+    __weak typeof(self) weakSelf = self;
+    [self.taskIdToTaskInfoProtector performWithBlock:^{
+        
+    }];
+}
+
 #pragma mark - Build URLRequest Helper
 
 - (nullable NSURLSessionDownloadTask *)downloadTaskForURLRequest:(NSURLRequest *)request {
+    __block NSURLSessionDownloadTask *downloadTask;
+    __weak typeof(self) weakSelf = self;
     
-    for (id key in self.taskInfoKeyedByTaskIdentifier) {
-        if ([key isKindOfClass:NSNumber.class]) {
-            NSNumber *taskIdentifier = (NSNumber *)key;
-            id value = [self.taskIdentifierKeyedByRequestIdentifier objectForKey:taskIdentifier];
-            
-            if ([value isKindOfClass:ZAURLSessionTaskInfo.class]) {
-                ZAURLSessionTaskInfo *taskInfo = (ZAURLSessionTaskInfo *)value;
-                if ([taskInfo.downloadTask.originalRequest.URL isEquivalent:request.URL]) {
-                    return taskInfo.downloadTask;
+    [self.taskIdToTaskInfoProtector performWithBlock:^{
+        for (id key in weakSelf.taskIdToTaskInfoProtector.object) {
+            if ([key isKindOfClass:NSNumber.class]) {
+                NSNumber *taskIdentifier = (NSNumber *)key;
+                id value = [self.requestIdToTaskId objectForKey:taskIdentifier];
+                
+                if ([value isKindOfClass:ZAURLSessionTaskInfo.class]) {
+                    ZAURLSessionTaskInfo *taskInfo = (ZAURLSessionTaskInfo *)value;
+                    if ([taskInfo.downloadTask.originalRequest.URL isEquivalent:request.URL]) {
+                        downloadTask = taskInfo.downloadTask;
+                        return;
+                    }
                 }
             }
         }
-    }
+    }];
     
-    return NULL;
+    return downloadTask;
 }
 
 - (nullable NSURLRequest *)buildURLRequestFromURLString:(nonnull NSString *)urlString headers:(nullable NSDictionary *)header {
@@ -185,7 +203,7 @@ static void url_session_manager_create_task_safely(dispatch_block_t _Nonnull blo
       downloadTask:(NSURLSessionDownloadTask *)downloadTask
 didFinishDownloadingToURL:(NSURL *)location {
     
-    ZAURLSessionTaskInfo *taskInfo = self.taskInfoKeyedByTaskIdentifier[[NSNumber numberWithInteger:downloadTask.taskIdentifier]];
+    ZAURLSessionTaskInfo *taskInfo = self.taskIdToTaskInfo[[NSNumber numberWithInteger:downloadTask.taskIdentifier]];
     for (ZAURLSessionTaskRequest *taskRequest in taskInfo.taskRequestsKeyedById.allValues) {
         taskRequest.completionBlock(downloadTask.response, downloadTask.error);
     }
@@ -197,7 +215,7 @@ didFinishDownloadingToURL:(NSURL *)location {
  totalBytesWritten:(int64_t)totalBytesWritten
 totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     
-    ZAURLSessionTaskInfo *taskInfo = self.taskInfoKeyedByTaskIdentifier[[NSNumber numberWithInteger:downloadTask.taskIdentifier]];
+    ZAURLSessionTaskInfo *taskInfo = self.taskIdToTaskInfo[[NSNumber numberWithInteger:downloadTask.taskIdentifier]];
     NSProgress *progress = [[NSProgress alloc] init];
     progress.totalUnitCount = totalBytesExpectedToWrite;
     progress.completedUnitCount = totalBytesWritten;
@@ -212,7 +230,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
  didResumeAtOffset:(int64_t)fileOffset
 expectedTotalBytes:(int64_t)expectedTotalBytes {
     
-    ZAURLSessionTaskInfo *taskInfo = self.taskInfoKeyedByTaskIdentifier[[NSNumber numberWithInteger:downloadTask.taskIdentifier]];
+    ZAURLSessionTaskInfo *taskInfo = self.taskIdToTaskInfo[[NSNumber numberWithInteger:downloadTask.taskIdentifier]];
     NSProgress *progress = [[NSProgress alloc] init];
     progress.totalUnitCount = expectedTotalBytes;
     progress.completedUnitCount = fileOffset;
@@ -228,7 +246,7 @@ expectedTotalBytes:(int64_t)expectedTotalBytes {
           dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data {
     
-    ZAURLSessionTaskInfo *taskInfo = self.taskInfoKeyedByTaskIdentifier[[NSNumber numberWithInteger:dataTask.taskIdentifier]];
+    ZAURLSessionTaskInfo *taskInfo = self.taskIdToTaskInfo[[NSNumber numberWithInteger:dataTask.taskIdentifier]];
     [taskInfo.receivedData appendData:data];
 }
 

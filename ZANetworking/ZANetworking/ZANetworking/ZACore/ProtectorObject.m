@@ -26,7 +26,7 @@
     return self;
 }
 
-- (void)aroundWithBlock:(void (^)(void))block {
+- (void)performWithBlock:(void (^)(void))block {
     pthread_mutex_lock(&(_protector_mutex));
     block();
     pthread_mutex_unlock(&(_protector_mutex));

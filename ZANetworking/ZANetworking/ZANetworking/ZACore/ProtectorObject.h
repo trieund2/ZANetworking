@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initFromObject:(ObjectType)object;
 
-- (void)aroundWithBlock:(void (^)(void))block;
+- (void)performWithBlock:(void (^)(void))block;
 
 @end
 
