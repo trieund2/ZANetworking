@@ -9,7 +9,11 @@
 #import "ZAURLSessionTaskRequest.h"
 #import "pthread.h"
 
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+@interface ZAURLSessionTaskRequest ()
+
+@end
+
+pthread_mutex_t url_session_task_request_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 @implementation ZAURLSessionTaskRequest
 
@@ -39,9 +43,9 @@ pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     NSAssert([self canBePaused], @"Error: Pause a task that can not be paused, id: %@", _identifier);
 #endif
     if (![self canBePaused]) { return; }
-    pthread_mutex_lock(&mutex);
+    pthread_mutex_lock(&url_session_task_request_mutex);
     _status = kURLSessionTaskRequestPaused;
-    pthread_mutex_unlock(&mutex);
+    pthread_mutex_unlock(&url_session_task_request_mutex);
 }
 
 - (BOOL)canBeCancelled {
@@ -53,9 +57,9 @@ pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     NSAssert([self canBeCancelled], @"Error: Cancel a task that can not be cancelled, id: %@", _identifier);
 #endif
     if (![self canBeCancelled]) { return; }
-    pthread_mutex_lock(&mutex);
+    pthread_mutex_lock(&url_session_task_request_mutex);
     _status = kURLSessionTaskRequestCancelled;
-    pthread_mutex_unlock(&mutex);
+    pthread_mutex_unlock(&url_session_task_request_mutex);
 }
 
 @end
