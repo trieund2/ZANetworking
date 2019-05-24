@@ -33,12 +33,13 @@ typedef NS_ENUM(NSInteger, ZAURLSessionTaskRequestStatus) {
                      destinationBlock:(ZAURLSessionDownloadTaskDestinationBlock)destinationBlock
                       completionBlock:(ZAURLSessionTaskCompletionBlock)completionBlock NS_DESIGNATED_INITIALIZER;
 
+// Return a BOOL shows that if this request can be paused or not
 - (BOOL)canBePaused;
 
-- (void)pauseTaskRequest;
+- (void)pause;
 
 - (BOOL)canBeCancelled;
 
-- (void)cancelTaskRequest;
+- (void)cancel;
 
 @end

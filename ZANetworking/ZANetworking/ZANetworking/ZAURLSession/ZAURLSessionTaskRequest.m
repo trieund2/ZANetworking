@@ -31,7 +31,7 @@
     return _status == kURLSessionTaskRequestInitialized;
 }
 
-- (void)pauseTaskRequest {
+- (void)pause {
 #if DEBUG
     NSAssert([self canBePaused], @"Error: Pause a task that can not be paused, id: %@", _identifier);
 #endif
@@ -43,7 +43,7 @@
     return _status != kURLSessionTaskRequestCancelled;
 }
 
-- (void)cancelTaskRequest {
+- (void)cancel {
 #if DEBUG
     NSAssert([self canBeCancelled], @"Error: Cancel a task that can not be cancelled, id: %@", _identifier);
 #endif
