@@ -47,8 +47,14 @@ typedef NS_ENUM(NSInteger, ZAURLSessionTaskPriority) {
                          taskRequest:(ZAURLSessionTaskRequest *)taskRequest
                             priority:(ZAURLSessionTaskPriority)priority NS_DESIGNATED_INITIALIZER;
 
+/* Return a BOOL shows that if this task can change to a specific status or not */
 - (BOOL)canChangeToStatus:(ZAURLSessionTaskStatus)status;
 
+/**
+ * @abstract Change this task's status to a new one
+ * @discussion Do this only after checking `canChangeToStatus` to see whether change action is possible.
+ * @warning If you try to change task's status to a forbidden one, it will throw an error in debug mode.
+ */
 - (void)changeStatusTo:(ZAURLSessionTaskStatus)status;
 
 @end

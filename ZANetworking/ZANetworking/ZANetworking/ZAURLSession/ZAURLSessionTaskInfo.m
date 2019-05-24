@@ -8,10 +8,13 @@
 
 #import "ZAURLSessionTaskInfo.h"
 #import "ZAURLSessionTaskRequest.h"
+#import "pthread.h"
 
 @interface ZAURLSessionTaskInfo ()
 
 @end
+
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 @implementation ZAURLSessionTaskInfo
 
@@ -55,7 +58,9 @@
     NSAssert([self canChangeToStatus:status], @"Error: Status can not be changed");
 #endif
     if (![self canChangeToStatus:status]) { return; }
+    pthread_mutex_lock(&mutex);
     _status = status;
+    pthread_mutex_unlock(&mutex);
 }
 
 @end
