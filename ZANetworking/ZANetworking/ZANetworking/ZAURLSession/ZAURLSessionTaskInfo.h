@@ -8,11 +8,18 @@
 
 #import <Foundation/Foundation.h>
 
+@class ZAURLSessionTaskRequest;
+
 typedef NS_ENUM(NSInteger, ZAURLSessionTaskStatus) {
-    kURLSessionTaskNotRunning = 0,
+    // Status when task has just been initialized.
+    kURLSessionTaskInitialized = 0,
+    // Status when task runs.
     kURLSessionTaskRunning = 1,
+    // Status when task completed, may be failed or successful.
     kURLSessionTaskCompleted = 2,
+    // Status when task is paused, might be resumed later.
     kURLSessionTaskPaused = 3,
+    // Status when task is cancelled, can not be resumed later.
     kURLSessionTaskCancelled = 4
 };
 
@@ -24,5 +31,20 @@ typedef NS_ENUM(NSInteger, ZAURLSessionTaskPriority) {
 };
 
 @interface ZAURLSessionTaskInfo : NSObject
+
+@property (strong, nonatomic, readonly) NSURLSessionDownloadTask *downloadTask;
+@property (strong, nonatomic) NSMutableData *receivedData;
+@property (assign, nonatomic) ZAURLSessionTaskStatus status;
+@property (assign, nonatomic) ZAURLSessionTaskPriority priority;
+@property (strong, nonatomic) NSMutableArray<ZAURLSessionTaskRequest *> *taskRequests;
+
+- (instancetype)init NS_UNAVAILABLE;
+
+- (instancetype)initWithDownloadTask:(NSURLSessionDownloadTask *)downloadTask
+                         taskRequest:(ZAURLSessionTaskRequest *)taskRequest;
+
+- (instancetype)initWithDownloadTask:(NSURLSessionDownloadTask *)downloadTask
+                         taskRequest:(ZAURLSessionTaskRequest *)taskRequest
+                            priority:(ZAURLSessionTaskPriority)priority NS_DESIGNATED_INITIALIZER;
 
 @end
