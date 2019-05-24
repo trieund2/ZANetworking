@@ -15,6 +15,8 @@
 		A1346B642296A1E6009E73B7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A1346B632296A1E6009E73B7 /* main.m */; };
 		A1346B6E2296A1E6009E73B7 /* ZANetworkingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A1346B6D2296A1E6009E73B7 /* ZANetworkingTests.m */; };
 		A1346B7E2296A5A7009E73B7 /* ZAURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A1346B7D2296A5A7009E73B7 /* ZAURLSessionManager.m */; };
+		D76F76BB229795300069AD99 /* ZAURLSessionTaskBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = D76F76BA229795300069AD99 /* ZAURLSessionTaskBlock.m */; };
+		D7E14A832296A9D900540DA8 /* ZAURLSessionTaskInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = D7E14A822296A9D900540DA8 /* ZAURLSessionTaskInfo.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +45,10 @@
 		A1346B6F2296A1E6009E73B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A1346B7C2296A5A7009E73B7 /* ZAURLSessionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZAURLSessionManager.h; sourceTree = "<group>"; };
 		A1346B7D2296A5A7009E73B7 /* ZAURLSessionManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZAURLSessionManager.m; sourceTree = "<group>"; };
+		D76F76B9229795300069AD99 /* ZAURLSessionTaskBlock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZAURLSessionTaskBlock.h; sourceTree = "<group>"; };
+		D76F76BA229795300069AD99 /* ZAURLSessionTaskBlock.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZAURLSessionTaskBlock.m; sourceTree = "<group>"; };
+		D7E14A812296A9D900540DA8 /* ZAURLSessionTaskInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZAURLSessionTaskInfo.h; sourceTree = "<group>"; };
+		D7E14A822296A9D900540DA8 /* ZAURLSessionTaskInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZAURLSessionTaskInfo.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +143,10 @@
 			children = (
 				A1346B7C2296A5A7009E73B7 /* ZAURLSessionManager.h */,
 				A1346B7D2296A5A7009E73B7 /* ZAURLSessionManager.m */,
+				D7E14A812296A9D900540DA8 /* ZAURLSessionTaskInfo.h */,
+				D7E14A822296A9D900540DA8 /* ZAURLSessionTaskInfo.m */,
+				D76F76B9229795300069AD99 /* ZAURLSessionTaskBlock.h */,
+				D76F76BA229795300069AD99 /* ZAURLSessionTaskBlock.m */,
 			);
 			path = ZAURLSession;
 			sourceTree = "<group>";
@@ -248,9 +258,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D7E14A832296A9D900540DA8 /* ZAURLSessionTaskInfo.m in Sources */,
 				A1346B592296A1E5009E73B7 /* ViewController.m in Sources */,
 				A1346B7E2296A5A7009E73B7 /* ZAURLSessionManager.m in Sources */,
 				A1346B642296A1E6009E73B7 /* main.m in Sources */,
+				D76F76BB229795300069AD99 /* ZAURLSessionTaskBlock.m in Sources */,
 				A1346B562296A1E5009E73B7 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
