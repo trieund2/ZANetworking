@@ -8,6 +8,14 @@
 
 #import "ZANetworkManager.h"
 
+NSString * const kNetworkStatusDidChangeNotification = @"kNetworkStatusDidChangeNotification";
+
+@interface ZANetworkManager ()
+
+@property (strong, nonatomic) Reachability *reach;
+
+@end
+
 @implementation ZANetworkManager
 
 + (instancetype)sharedInstance {
@@ -21,9 +29,26 @@
 
 - (instancetype)initSingleton {
     if (self = [super init]) {
-        
+        self.reach = Reachability.reachabilityForInternetConnection;
+        [self.reach startNotifier];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(networkStatusChangedHandler:)
+                                                   name:kReachabilityChangedNotification
+                                                 object:nil];
     }
     return self;
+}
+
+- (void)networkStatusChangedHandler:(NSNotification *)notification {
+    [NSNotificationCenter.defaultCenter postNotificationName:kNetworkStatusDidChangeNotification object:nil];
+}
+
+- (NetworkStatus)currentNetworkStatus {
+    return self.reach.currentReachabilityStatus;
+}
+
+- (NSString *)currentNetworkStatusString {
+    return self.reach.currentReachabilityString;
 }
 
 @end

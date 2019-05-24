@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "Reachability.h"
 
+FOUNDATION_EXPORT NSString * const kNetworkStatusDidChangeNotification;
+
 @interface ZANetworkManager : NSObject
 
 /* Make init private. Use sharedInstance instead. */
@@ -16,5 +18,9 @@
 
 /* Return singleton. */
 + (instancetype)sharedInstance;
+
+- (NetworkStatus)currentNetworkStatus;
+
+- (NSString *)currentNetworkStatusString;
 
 @end
