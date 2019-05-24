@@ -33,4 +33,29 @@
     return self;
 }
 
+- (BOOL)canChangeToStatus:(ZAURLSessionTaskStatus)status {
+    switch (_status) {
+        case kURLSessionTaskInitialized:
+            return YES;
+            
+        case kURLSessionTaskRunning:
+            return (status == kURLSessionTaskPaused) || (status == kURLSessionTaskCompleted) || (status == kURLSessionTaskCancelled);
+            
+        case kURLSessionTaskPaused:
+            return (status == kURLSessionTaskRunning) || (status == kURLSessionTaskCompleted) || (status == kURLSessionTaskCancelled);
+            
+        case kURLSessionTaskCompleted:
+        case kURLSessionTaskCancelled:
+            return NO;
+    }
+}
+
+- (void)changeStatusTo:(ZAURLSessionTaskStatus)status {
+#if DEBUG
+    NSAssert([self canChangeToStatus:status], @"Error: Status can not be changed");
+#endif
+    if (![self canChangeToStatus:status]) { return; }
+    _status = status;
+}
+
 @end

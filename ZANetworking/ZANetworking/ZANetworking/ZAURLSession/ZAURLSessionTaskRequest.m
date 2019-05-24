@@ -35,6 +35,7 @@
 #if DEBUG
     NSAssert([self canBePaused], @"Error: Pause a task that can not be paused, id: %@", _identifier);
 #endif
+    if (![self canBePaused]) { return; }
     _status = kURLSessionTaskRequestPaused;
 }
 
@@ -46,6 +47,7 @@
 #if DEBUG
     NSAssert([self canBeCancelled], @"Error: Cancel a task that can not be cancelled, id: %@", _identifier);
 #endif
+    if (![self canBeCancelled]) { return; }
     _status = kURLSessionTaskRequestCancelled;
 }
 
