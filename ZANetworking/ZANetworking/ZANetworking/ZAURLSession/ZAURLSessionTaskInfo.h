@@ -7,8 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
-@class ZAURLSessionTaskRequest;
+#import "ZAURLSessionTaskRequest.h"
 
 typedef NS_ENUM(NSInteger, ZAURLSessionTaskStatus) {
     // Status when task has just been initialized.
@@ -36,7 +35,7 @@ typedef NS_ENUM(NSInteger, ZAURLSessionTaskPriority) {
 @property (strong, nonatomic) NSMutableData *receivedData;
 @property (assign, nonatomic, readonly) ZAURLSessionTaskStatus status;
 @property (assign, nonatomic) ZAURLSessionTaskPriority priority;
-@property (strong, nonatomic) NSMutableArray<ZAURLSessionTaskRequest *> *taskRequests;
+@property (strong, nonatomic) NSMutableDictionary<NSString *, ZAURLSessionTaskRequest *> *taskRequestsKeyedById;
 
 - (instancetype)init NS_UNAVAILABLE;
 
