@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ZADownloadPriority.h"
+#import "ZAURLSessionTaskRequest.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,9 +16,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedManager;
 
-- (nonnull NSString *)downloadTaskFromURLString:(NSString *)urlString
+- (NSString *)downloadTaskFromURLString:(NSString *)urlString
                                 headers:(NSDictionary *)header
-                               priority:(ZADownloadPriority)priority;
+                               priority:(ZADownloadPriority)priority
+                          progressBlock:(ZAURLSessionTaskProgressBlock)progressBlock
+                       destinationBlock:(ZAURLSessionDownloadTaskDestinationBlock)destinationBlock
+                        completionBlock:(ZAURLSessionTaskCompletionBlock)completionBloc;
 
 - (void)resumeDownloadTaskWithIdentifier:(NSString *)identifier;
 - (void)pauseDownloadTaskWithIdentifier:(NSString *)identifier;

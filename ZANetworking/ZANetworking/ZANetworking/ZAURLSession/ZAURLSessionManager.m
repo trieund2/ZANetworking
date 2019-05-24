@@ -7,6 +7,8 @@
 //
 
 #import "ZAURLSessionManager.h"
+#import "ZAURLSessionTaskInfo.h"
+#import "NSURL+URIEquivalence.h"
 
 #pragma mark - Queue Helper
 
@@ -78,29 +80,51 @@ static void url_session_manager_create_task_safely(dispatch_block_t _Nonnull blo
 
 #pragma mark - Interface methods
 
-- (NSString *)downloadTaskFromURLString:(NSString *)urlString headers:(NSDictionary *)header priority:(ZADownloadPriority)priority {
+/// This method return Request Identifier. Use this Identifier to pause, cancel, resume task
+- (NSString *)downloadTaskFromURLString:(NSString *)urlString
+                                headers:(NSDictionary *)header
+                               priority:(ZADownloadPriority)priority
+                          progressBlock:(ZAURLSessionTaskProgressBlock)progressBlock
+                       destinationBlock:(ZAURLSessionDownloadTaskDestinationBlock)destinationBlock
+                        completionBlock:(ZAURLSessionTaskCompletionBlock)completionBlock {
+    
+    ZAURLSessionTaskRequest *taskRequest = [[ZAURLSessionTaskRequest alloc] initWithProgressBlock:progressBlock
+                                                                                 destinationBlock:destinationBlock
+                                                                                  completionBlock:completionBlock];
+    
     __block NSURLSessionDownloadTask *downloadTask = nil;
     __weak typeof(self) weakSelf = self;
     url_session_manager_create_task_safely(^{
         NSURLRequest *request = [weakSelf buildURLRequestFromURLString:urlString headers:header];
-        // TODO: check if don't have request create new downloadtask
-        downloadTask = [weakSelf.session downloadTaskWithRequest:request];
+        downloadTask = [weakSelf downloadTaskForURLRequest:request];
+        if (!downloadTask) {
+            downloadTask = [weakSelf.session downloadTaskWithRequest:request];
+            ZAURLSessionTaskInfo *taskInfo = [[ZAURLSessionTaskInfo alloc] initWithDownloadTask:downloadTask taskRequest:taskRequest];
+            weakSelf.mutableTaskInfoKeyedByTaskIdentifier[@(downloadTask.taskIdentifier)] = taskInfo;
+            [downloadTask resume];
+        }
+        
+        weakSelf.mutableTaskIdentifierKeyedByRequestIdentifier[taskRequest.identifier] = [NSNumber numberWithInteger:downloadTask.taskIdentifier];
     });
     
-    NSString *requestIdentifier = [[NSUUID UUID] UUIDString];
-    if (downloadTask) {
-        // init task info
-        self.mutableTaskInfoKeyedByTaskIdentifier[@(downloadTask.taskIdentifier)] = downloadTask;
-        self.mutableTaskIdentifierKeyedByRequestIdentifier[requestIdentifier] = [NSNumber numberWithInteger:downloadTask.taskIdentifier];
-        [downloadTask resume];
-    } else {
-        // TODO: add current request to taskInfo
-    }
-    
-    return NULL;
+    return taskRequest.identifier;
 }
 
 - (void)resumeDownloadTaskWithIdentifier:(NSString *)identifier {
+    if (!identifier) { return; }
+    
+    ZAURLSessionTaskInfo *taskInfo = self.mutableTaskInfoKeyedByTaskIdentifier[identifier];
+    
+    if (!taskInfo) { return; }
+    
+    if ([taskInfo canChangeToStatus:(kURLSessionTaskRunning)]) {
+        return;
+    }
+    
+    NSURLSessionDownloadTask *resumeDownloadTask = [self.session downloadTaskWithResumeData:taskInfo.receivedData];
+    [self.mutableTaskIdentifierKeyedByRequestIdentifier removeObjectForKey:identifier];
+    
+    [taskInfo resumeDownloadTaskByIdentifier:identifier];
     
 }
 
@@ -113,6 +137,25 @@ static void url_session_manager_create_task_safely(dispatch_block_t _Nonnull blo
 }
 
 #pragma mark - Build URLRequest Helper
+
+- (nullable NSURLSessionDownloadTask *)downloadTaskForURLRequest:(NSURLRequest *)request {
+    
+    for (id key in self.mutableTaskInfoKeyedByTaskIdentifier) {
+        if ([key isKindOfClass:NSNumber.class]) {
+            NSNumber *taskIdentifier = (NSNumber *)key;
+            id value = [self.mutableTaskIdentifierKeyedByRequestIdentifier objectForKey:taskIdentifier];
+            
+            if ([value isKindOfClass:ZAURLSessionTaskInfo.class]) {
+                ZAURLSessionTaskInfo *taskInfo = (ZAURLSessionTaskInfo *)value;
+                if ([taskInfo.downloadTask.originalRequest.URL isEquivalent:request.URL]) {
+                    return taskInfo.downloadTask;
+                }
+            }
+        }
+    }
+    
+    return NULL;
+}
 
 - (nullable NSURLRequest *)buildURLRequestFromURLString:(nonnull NSString *)urlString headers:(nullable NSDictionary *)header {
     if (!urlString) { return NULL; }
