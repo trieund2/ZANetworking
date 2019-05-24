@@ -56,6 +56,8 @@ typedef NS_ENUM(NSInteger, ZAURLSessionTaskPriority) {
  */
 - (void)changeStatusTo:(ZAURLSessionTaskStatus)status;
 
+- (ZAURLSessionTaskRequest *)taskRequestByIdentifier:(NSString *)identifier;
+
 - (void)resumeDownloadTaskByIdentifier:(NSString *)identifier;
 
 @end

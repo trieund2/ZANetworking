@@ -62,4 +62,12 @@ pthread_mutex_t url_session_task_info_mutex = PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_unlock(&url_session_task_info_mutex);
 }
 
+- (ZAURLSessionTaskRequest *)taskRequestByIdentifier:(NSString *)identifier {
+    return [self.taskRequestsKeyedById objectForKey:identifier];
+}
+
+- (void)resumeDownloadTaskByIdentifier:(NSString *)identifier {
+    [self.taskRequestsKeyedById removeObjectForKey:identifier];
+}
+
 @end
