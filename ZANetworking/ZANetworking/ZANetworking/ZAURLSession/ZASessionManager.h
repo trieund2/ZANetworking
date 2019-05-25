@@ -1,5 +1,5 @@
 //
-//  ZAURLSessionManager.h
+//  ZASessionManager.h
 //  ZANetworking
 //
 //  Created by CPU12202 on 5/23/19.
@@ -8,11 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import "ZADownloadPriority.h"
-#import "ZAURLSessionTaskRequest.h"
+#import "ZADownloadMonitor.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ZAURLSessionManager : NSObject <NSURLSessionDataDelegate, NSURLSessionDownloadDelegate>
+@interface ZASessionManager : NSObject <NSURLSessionDataDelegate, NSURLSessionDownloadDelegate>
 
 + (instancetype)sharedManager;
 

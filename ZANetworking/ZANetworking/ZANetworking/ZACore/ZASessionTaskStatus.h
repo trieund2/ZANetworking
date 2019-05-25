@@ -9,7 +9,7 @@
 #ifndef ZAURLSessionTaskStatus_h
 #define ZAURLSessionTaskStatus_h
 
-typedef NS_ENUM(NSInteger, ZAURLSessionTaskStatus) {
+typedef NS_ENUM(NSInteger, ZASessionTaskStatus) {
     // Status when task has just been initialized.
     ZAURLSessionTaskStatusInitialized = 0,
     // Status when task runs.

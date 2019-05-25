@@ -6,16 +6,16 @@
 //  Copyright © 2019 com.trieund. All rights reserved.
 //
 
-#import "ZAURLSessionTaskRequest.h"
+#import "ZADownloadMonitor.h"
 #import "pthread.h"
 
-@interface ZAURLSessionTaskRequest ()
+@interface ZADownloadMonitor ()
 
 @end
 
 pthread_mutex_t url_session_task_request_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-@implementation ZAURLSessionTaskRequest
+@implementation ZADownloadMonitor
 
 - (instancetype)init {
     return [self initWithProgressBlock:nil destinationBlock:nil completionBlock:nil];

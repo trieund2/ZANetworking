@@ -1,5 +1,5 @@
 //
-//  ZAURLSessionTaskRequest.h
+//  ZAURLSessionDownloadMonitorBlock.h
 //  ZANetworking
 //
 //  Created by CPU12166 on 5/24/19.
@@ -12,7 +12,7 @@ typedef void (^ZAURLSessionTaskProgressBlock)(NSProgress *);
 typedef NSURL * (^ZAURLSessionDownloadTaskDestinationBlock)(NSURL *location);
 typedef void (^ZAURLSessionTaskCompletionBlock)(NSURLResponse *response, NSError *error);
 
-@interface ZAURLSessionTaskRequest : NSObject
+@interface ZADownloadMonitor : NSObject
 
 @property (copy, nonatomic, readonly) ZAURLSessionTaskProgressBlock progressBlock;
 @property (copy, nonatomic, readonly) ZAURLSessionDownloadTaskDestinationBlock destinationBlock;

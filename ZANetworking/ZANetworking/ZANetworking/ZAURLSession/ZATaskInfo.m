@@ -6,34 +6,34 @@
 //  Copyright © 2019 com.trieund. All rights reserved.
 //
 
-#import "ZAURLSessionTaskInfo.h"
+#import "ZATaskInfo.h"
 #import "pthread.h"
 
-@interface ZAURLSessionTaskInfo ()
+@interface ZATaskInfo ()
 
 @end
 
-@implementation ZAURLSessionTaskInfo
+@implementation ZATaskInfo
 
 - (instancetype)initWithDownloadTask:(NSURLSessionDownloadTask *)downloadTask
-                         taskRequest:(ZAURLSessionTaskRequest *)taskRequest {
-    return [self initWithDownloadTask:downloadTask taskRequest:taskRequest priority:ZAURLSessionTaskPriorityMedium];
+                         taskRequest:(ZADownloadMonitor *)taskRequest {
+    return [self initWithDownloadTask:downloadTask taskRequest:taskRequest priority:ZADownloadPriorityMedium];
 }
 
 - (instancetype)initWithDownloadTask:(NSURLSessionDownloadTask *)downloadTask
-                         taskRequest:(ZAURLSessionTaskRequest *)taskRequest
-                            priority:(ZAURLSessionTaskPriority)priority {
+                         taskRequest:(ZADownloadMonitor *)taskRequest
+                            priority:(ZADownloadPriority)priority {
     if (self = [super init]) {
         _downloadTask = downloadTask;
         _priority = priority;
         _receivedData = [NSMutableData data];
         _status = ZAURLSessionTaskStatusInitialized;
-        _requestIdToTaskRequestDownloading = [[NSMutableDictionary alloc] init];
+        _requestToDownloadMonitorDownloading = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
 
-- (BOOL)canChangeToStatus:(ZAURLSessionTaskStatus)status {
+- (BOOL)canChangeToStatus:(ZASessionTaskStatus)status {
     switch (_status) {
         case ZAURLSessionTaskStatusInitialized:
             return YES;
@@ -50,7 +50,7 @@
     }
 }
 
-- (void)changeStatusTo:(ZAURLSessionTaskStatus)status {
+- (void)changeStatusTo:(ZASessionTaskStatus)status {
 #if DEBUG
     NSAssert([self canChangeToStatus:status], @"Error: Status can not be changed");
 #endif
