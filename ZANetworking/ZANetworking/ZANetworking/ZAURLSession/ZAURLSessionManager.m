@@ -178,7 +178,7 @@
     return returnTaskInfo;
 }
 
-- (nullable NSURLRequest *)buildURLRequestFromURLString:(nonnull NSString *)urlString headers:(nullable NSDictionary *)header {
+- (nullable NSURLRequest *)buildURLRequestFromURLString:(nonnull NSString *)urlString headers:(nullable NSDictionary<NSString *, NSString *> *)header {
     if (nil == urlString) { return NULL; }
     
     NSURL *url = [NSURL URLWithString:urlString];
@@ -187,6 +187,12 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     request.timeoutInterval = [self getTimeoutInterval];
     if (header) {
+        for (NSString* key in header.allKeys) {
+            NSString *value = [header objectForKey:key];
+            if (value) {
+                [request setValue:value forHTTPHeaderField:key];
+            }
+        }
         request.allHTTPHeaderFields = header;
     }
     
