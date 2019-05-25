@@ -51,4 +51,8 @@ NSString * const kNetworkStatusDidChangeNotification = @"kNetworkStatusDidChange
     return self.reach.currentReachabilityString;
 }
 
+- (BOOL)isConnectionAvailable {
+    return self.currentNetworkStatus != NotReachable;
+}
+
 @end

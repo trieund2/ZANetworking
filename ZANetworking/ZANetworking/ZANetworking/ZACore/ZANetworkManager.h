@@ -23,4 +23,6 @@ FOUNDATION_EXPORT NSString * const kNetworkStatusDidChangeNotification;
 
 - (NSString *)currentNetworkStatusString;
 
+- (BOOL)isConnectionAvailable;
+
 @end
