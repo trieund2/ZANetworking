@@ -17,6 +17,10 @@
 		A1346B7E2296A5A7009E73B7 /* ZASessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A1346B7D2296A5A7009E73B7 /* ZASessionManager.m */; };
 		D76F76BB229795300069AD99 /* ZADownloadMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = D76F76BA229795300069AD99 /* ZADownloadMonitor.m */; };
 		D7E14A832296A9D900540DA8 /* ZATaskInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = D7E14A822296A9D900540DA8 /* ZATaskInfo.m */; };
+		D76F76BF2297E02B0069AD99 /* ZANetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D76F76BE2297E02B0069AD99 /* ZANetworkManager.m */; };
+		D76F76C42297E1CA0069AD99 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = D76F76C32297E1CA0069AD99 /* Reachability.m */; };
+		D76F76C72297E4B30069AD99 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D76F76C62297E4B30069AD99 /* SystemConfiguration.framework */; };
+
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +56,11 @@
 		D76F76B9229795300069AD99 /* ZADownloadMonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZADownloadMonitor.h; sourceTree = "<group>"; };
 		D76F76BA229795300069AD99 /* ZADownloadMonitor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZADownloadMonitor.m; sourceTree = "<group>"; };
 		D7E14A822296A9D900540DA8 /* ZATaskInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZATaskInfo.m; sourceTree = "<group>"; };
+		D76F76BD2297E02B0069AD99 /* ZANetworkManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZANetworkManager.h; sourceTree = "<group>"; };
+		D76F76BE2297E02B0069AD99 /* ZANetworkManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZANetworkManager.m; sourceTree = "<group>"; };
+		D76F76C22297E1CA0069AD99 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		D76F76C32297E1CA0069AD99 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		D76F76C62297E4B30069AD99 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +68,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D76F76C72297E4B30069AD99 /* SystemConfiguration.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +88,7 @@
 				A1346B532296A1E5009E73B7 /* ZANetworking */,
 				A1346B6C2296A1E6009E73B7 /* ZANetworkingTests */,
 				A1346B522296A1E5009E73B7 /* Products */,
+				D76F76C52297E4B30069AD99 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -93,6 +104,7 @@
 		A1346B532296A1E5009E73B7 /* ZANetworking */ = {
 			isa = PBXGroup;
 			children = (
+				D76F76C02297E1B30069AD99 /* ThirdParty */,
 				A1346B7A2296A263009E73B7 /* ZANetworking */,
 				A1346B782296A226009E73B7 /* Supports */,
 				A1346B792296A245009E73B7 /* AppDelegate */,
@@ -160,8 +172,44 @@
 			children = (
 				A1346B832296A7C3009E73B7 /* ZADownloadPriority.h */,
 				C545BF092299830600304106 /* ZASessionTaskStatus.h */,
+				D76F76BD2297E02B0069AD99 /* ZANetworkManager.h */,
+				D76F76BE2297E02B0069AD99 /* ZANetworkManager.m */,
 			);
 			path = ZACore;
+			sourceTree = "<group>";
+		};
+		A19845372297A11A00EC7000 /* Category */ = {
+			isa = PBXGroup;
+			children = (
+				A19845382297A1A900EC7000 /* NSURL+URIEquivalence.h */,
+				A19845392297A1A900EC7000 /* NSURL+URIEquivalence.m */,
+			);
+			path = Category;
+			sourceTree = "<group>";
+		};
+		D76F76C02297E1B30069AD99 /* ThirdParty */ = {
+			isa = PBXGroup;
+			children = (
+				D76F76C12297E1BD0069AD99 /* Reachability */,
+			);
+			path = ThirdParty;
+			sourceTree = "<group>";
+		};
+		D76F76C12297E1BD0069AD99 /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				D76F76C22297E1CA0069AD99 /* Reachability.h */,
+				D76F76C32297E1CA0069AD99 /* Reachability.m */,
+			);
+			path = Reachability;
+			sourceTree = "<group>";
+		};
+		D76F76C52297E4B30069AD99 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D76F76C62297E4B30069AD99 /* SystemConfiguration.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -269,6 +317,9 @@
 				A1346B7E2296A5A7009E73B7 /* ZASessionManager.m in Sources */,
 				A1346B642296A1E6009E73B7 /* main.m in Sources */,
 				D76F76BB229795300069AD99 /* ZADownloadMonitor.m in Sources */,
+				D76F76BF2297E02B0069AD99 /* ZANetworkManager.m in Sources */,
+				D76F76BB229795300069AD99 /* ZAURLSessionTaskRequest.m in Sources */,
+				D76F76C42297E1CA0069AD99 /* Reachability.m in Sources */,
 				A1346B562296A1E5009E73B7 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

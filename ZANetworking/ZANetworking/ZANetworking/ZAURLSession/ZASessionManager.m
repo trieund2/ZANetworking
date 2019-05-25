@@ -8,7 +8,6 @@
 
 #import "ZASessionManager.h"
 #import "ZATaskInfo.h"
-#import "NSURL+URIEquivalence.h"
 
 @interface ZASessionManager ()
 @property (readonly, nonatomic) NSURLSession *session;
