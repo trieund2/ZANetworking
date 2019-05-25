@@ -53,4 +53,6 @@ typedef NS_ENUM(NSInteger, ZAURLSessionTaskRequestStatus) {
  */
 - (void)cancel;
 
+- (void)updateStatus:(ZAURLSessionTaskRequestStatus)status;
+
 @end

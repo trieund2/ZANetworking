@@ -62,4 +62,10 @@ pthread_mutex_t url_session_task_request_mutex = PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_unlock(&url_session_task_request_mutex);
 }
 
+- (void)updateStatus:(ZAURLSessionTaskRequestStatus)status {
+    pthread_mutex_lock(&url_session_task_request_mutex);
+    _status = status;
+    pthread_mutex_unlock(&url_session_task_request_mutex);
+}
+
 @end

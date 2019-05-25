@@ -28,9 +28,10 @@ pthread_mutex_t url_session_task_info_mutex = PTHREAD_MUTEX_INITIALIZER;
     if (self = [super init]) {
         _downloadTask = downloadTask;
         _priority = priority;
-        _taskRequestsKeyedById = [NSMutableDictionary dictionaryWithObject:taskRequest forKey:taskRequest.identifier];
         _receivedData = [NSMutableData data];
         _status = kURLSessionTaskInitialized;
+        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObject:taskRequest forKey:taskRequest.identifier];
+        _requestIdToTaskRequestProtector = [[ProtectorObject alloc] initFromObject:dict];
     }
     return self;
 }
@@ -63,11 +64,27 @@ pthread_mutex_t url_session_task_info_mutex = PTHREAD_MUTEX_INITIALIZER;
 }
 
 - (ZAURLSessionTaskRequest *)taskRequestByIdentifier:(NSString *)identifier {
-    return [self.taskRequestsKeyedById objectForKey:identifier];
+    ZAURLSessionTaskRequest *taskRequest;
+    __weak typeof(self) weakSelf = self;
+    [self.requestIdToTaskRequestProtector performWithBlock:^{
+        [weakSelf.requestIdToTaskRequestProtector.object objectForKey:identifier];
+    }];
+    
+    return taskRequest;
 }
 
 - (void)resumeDownloadTaskByIdentifier:(NSString *)identifier {
-    [self.taskRequestsKeyedById removeObjectForKey:identifier];
+    __weak typeof(self) weakSelf = self;
+    [self.requestIdToTaskRequestProtector performWithBlock:^{
+        [weakSelf.requestIdToTaskRequestProtector.object removeObjectForKey:identifier];
+    }];
+}
+
+- (void)addTaskRequest:(ZAURLSessionTaskRequest *)taskRequest {
+    __weak typeof(self) weakSelf = self;
+    [self.requestIdToTaskRequestProtector performWithBlock:^{
+        weakSelf.requestIdToTaskRequestProtector.object[taskRequest.identifier] = taskRequest;
+    }];
 }
 
 @end
