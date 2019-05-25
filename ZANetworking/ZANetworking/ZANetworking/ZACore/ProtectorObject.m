@@ -10,9 +10,7 @@
 #import "pthread.h"
 
 @interface ProtectorObject ()
-
 @property (nonatomic, readonly) pthread_mutex_t protector_mutex;
-
 @end
 
 @implementation ProtectorObject

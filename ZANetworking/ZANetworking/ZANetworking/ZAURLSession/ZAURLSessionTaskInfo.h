@@ -12,31 +12,31 @@
 
 typedef NS_ENUM(NSInteger, ZAURLSessionTaskStatus) {
     // Status when task has just been initialized.
-    kURLSessionTaskInitialized = 0,
+    ZAURLSessionTaskStatusInitialized = 0,
     // Status when task runs.
-    kURLSessionTaskRunning = 1,
+    ZAURLSessionTaskStatusRunning = 1,
     // Status when task is paused, might be resumed later.
-    kURLSessionTaskPaused = 2,
+    ZAURLSessionTaskStatusPaused = 2,
     // Status when task completed, may be failed or successful.
-    kURLSessionTaskCompleted = 3,
+    ZAURLSessionTaskStatusCompleted = 3,
     // Status when task is cancelled, can not be resumed later.
-    kURLSessionTaskCancelled = 4
+    ZAURLSessionTaskStatusCancelled = 4
 };
 
 typedef NS_ENUM(NSInteger, ZAURLSessionTaskPriority) {
-    kURLSessionTaskPriorityVeryHigh = 0,
-    kURLSessionTaskPriorityHigh = 1,
-    kURLSessionTaskPriorityMedium = 2,
-    kURLSessionTaskPriorityLow = 3
+    ZAURLSessionTaskPriorityVeryHigh    = 0,
+    ZAURLSessionTaskPriorityHigh        = 1,
+    ZAURLSessionTaskPriorityMedium      = 2,
+    ZAURLSessionTaskPriorityLow         = 3
 };
 
 @interface ZAURLSessionTaskInfo : NSObject
 
 @property (strong, nonatomic, readonly) NSURLSessionDownloadTask *downloadTask;
-@property (strong, nonatomic) NSMutableData *receivedData;
+@property (strong, nonatomic, readonly) ProtectorObject<NSMutableData *> *receivedDataProtector;
 @property (assign, nonatomic, readonly) ZAURLSessionTaskStatus status;
 @property (assign, nonatomic) ZAURLSessionTaskPriority priority;
-@property (strong, nonatomic) ProtectorObject<NSMutableDictionary<NSString *, ZAURLSessionTaskRequest *> *> *requestIdToTaskRequestProtector;
+@property (strong, nonatomic, readonly) ProtectorObject<NSMutableDictionary<NSString *, ZAURLSessionTaskRequest *> *> *requestIdToTaskRequestProtector;
 
 - (instancetype)init NS_UNAVAILABLE;
 
@@ -57,10 +57,14 @@ typedef NS_ENUM(NSInteger, ZAURLSessionTaskPriority) {
  */
 - (void)changeStatusTo:(ZAURLSessionTaskStatus)status;
 
-- (ZAURLSessionTaskRequest *)taskRequestByIdentifier:(NSString *)identifier;
+- (ZAURLSessionTaskRequest *)taskRequestByRequestId:(NSString *)identifier;
 
 - (void)resumeDownloadTaskByIdentifier:(NSString *)identifier;
 
 - (void)addTaskRequest:(ZAURLSessionTaskRequest *)taskRequest;
+
+- (void)cancelTaskRequestByRequestId:(NSString *)requestId;
+
+- (NSUInteger)numberOfTaskRequests;
 
 @end

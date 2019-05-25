@@ -19,7 +19,7 @@ pthread_mutex_t url_session_task_info_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 - (instancetype)initWithDownloadTask:(NSURLSessionDownloadTask *)downloadTask
                          taskRequest:(ZAURLSessionTaskRequest *)taskRequest {
-    return [self initWithDownloadTask:downloadTask taskRequest:taskRequest priority:kURLSessionTaskPriorityMedium];
+    return [self initWithDownloadTask:downloadTask taskRequest:taskRequest priority:ZAURLSessionTaskPriorityMedium];
 }
 
 - (instancetype)initWithDownloadTask:(NSURLSessionDownloadTask *)downloadTask
@@ -28,8 +28,8 @@ pthread_mutex_t url_session_task_info_mutex = PTHREAD_MUTEX_INITIALIZER;
     if (self = [super init]) {
         _downloadTask = downloadTask;
         _priority = priority;
-        _receivedData = [NSMutableData data];
-        _status = kURLSessionTaskInitialized;
+        _receivedDataProtector = [[ProtectorObject alloc] initFromObject:[NSMutableData data]];
+        _status = ZAURLSessionTaskStatusInitialized;
         NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObject:taskRequest forKey:taskRequest.identifier];
         _requestIdToTaskRequestProtector = [[ProtectorObject alloc] initFromObject:dict];
     }
@@ -38,17 +38,17 @@ pthread_mutex_t url_session_task_info_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 - (BOOL)canChangeToStatus:(ZAURLSessionTaskStatus)status {
     switch (_status) {
-        case kURLSessionTaskInitialized:
+        case ZAURLSessionTaskStatusInitialized:
             return YES;
             
-        case kURLSessionTaskRunning:
-            return (status == kURLSessionTaskPaused) || (status == kURLSessionTaskCompleted) || (status == kURLSessionTaskCancelled);
+        case ZAURLSessionTaskStatusRunning:
+            return (status == ZAURLSessionTaskStatusPaused) || (status == ZAURLSessionTaskStatusCompleted) || (status == ZAURLSessionTaskStatusCancelled);
             
-        case kURLSessionTaskPaused:
-            return (status == kURLSessionTaskRunning) || (status == kURLSessionTaskCompleted) || (status == kURLSessionTaskCancelled);
+        case ZAURLSessionTaskStatusPaused:
+            return (status == ZAURLSessionTaskStatusRunning) || (status == ZAURLSessionTaskStatusCompleted) || (status == ZAURLSessionTaskStatusCancelled);
             
-        case kURLSessionTaskCompleted:
-        case kURLSessionTaskCancelled:
+        case ZAURLSessionTaskStatusCompleted:
+        case ZAURLSessionTaskStatusCancelled:
             return NO;
     }
 }
@@ -63,7 +63,7 @@ pthread_mutex_t url_session_task_info_mutex = PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_unlock(&url_session_task_info_mutex);
 }
 
-- (ZAURLSessionTaskRequest *)taskRequestByIdentifier:(NSString *)identifier {
+- (ZAURLSessionTaskRequest *)taskRequestByRequestId:(NSString *)identifier {
     ZAURLSessionTaskRequest *taskRequest;
     __weak typeof(self) weakSelf = self;
     [self.requestIdToTaskRequestProtector performWithBlock:^{
@@ -85,6 +85,22 @@ pthread_mutex_t url_session_task_info_mutex = PTHREAD_MUTEX_INITIALIZER;
     [self.requestIdToTaskRequestProtector performWithBlock:^{
         weakSelf.requestIdToTaskRequestProtector.object[taskRequest.identifier] = taskRequest;
     }];
+}
+
+- (void)cancelTaskRequestByRequestId:(NSString *)requestId {
+    __weak typeof(self) weakSelf = self;
+    [self.requestIdToTaskRequestProtector performWithBlock:^{
+        [weakSelf.requestIdToTaskRequestProtector.object removeObjectForKey:requestId];
+    }];
+}
+
+- (NSUInteger)numberOfTaskRequests {
+    __block NSUInteger count;
+    __weak typeof(self) weakSelf = self;
+    [self.requestIdToTaskRequestProtector performWithBlock:^{
+        count = weakSelf.requestIdToTaskRequestProtector.object.count;
+    }];
+    return count;
 }
 
 @end
