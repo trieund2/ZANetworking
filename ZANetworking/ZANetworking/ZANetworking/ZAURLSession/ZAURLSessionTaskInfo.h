@@ -33,7 +33,7 @@ typedef NS_ENUM(NSInteger, ZAURLSessionTaskPriority) {
 @interface ZAURLSessionTaskInfo : NSObject
 
 @property (strong, nonatomic, readonly) NSURLSessionDownloadTask *downloadTask;
-@property (strong, nonatomic, readonly) ProtectorObject<NSMutableData *> *receivedDataProtector;
+@property (strong, nonatomic, readonly) NSMutableData *receivedData;
 @property (assign, nonatomic, readonly) ZAURLSessionTaskStatus status;
 @property (assign, nonatomic) ZAURLSessionTaskPriority priority;
 @property (strong, nonatomic, readonly) ProtectorObject<NSMutableDictionary<NSString *, ZAURLSessionTaskRequest *> *> *requestIdToTaskRequestProtector;

@@ -17,6 +17,7 @@
 @property (readonly, nonatomic) NSOperationQueue *sessionDelegateQueue;
 @property (readonly, nonatomic) ProtectorObject<NSMutableDictionary<NSNumber*, ZAURLSessionTaskInfo*> *> *taskIdToTaskInfoProtector;
 @property (readonly, nonatomic) ProtectorObject<NSMutableDictionary<NSString*, NSNumber*> *> *requestIdToTaskIdProtector;
+@property (readonly, nonatomic) NSMutableDictionary<NSURLRequest*, NSString*> *urlToRequestId;
 @end
 
 #pragma mark -
@@ -93,7 +94,7 @@
     ZAURLSessionTaskRequest *resumeTaskRequest = [taskInfo taskRequestByRequestId:identifier];
     if (!resumeTaskRequest) { return; }
     
-    NSURLSessionDownloadTask *resumeDownloadTask = [self.session downloadTaskWithResumeData:taskInfo.receivedDataProtector.object];
+    NSURLSessionDownloadTask *resumeDownloadTask = [self.session downloadTaskWithResumeData:taskInfo.receivedData];
     ZAURLSessionTaskInfo *resumeTaskInfo = [[ZAURLSessionTaskInfo alloc] initWithDownloadTask:resumeDownloadTask taskRequest:resumeTaskRequest];
     [self addTaskInfo:resumeTaskInfo keyedByDownloadTaskId:[NSNumber numberWithInteger:resumeDownloadTask.taskIdentifier]];
     [self addDownloadTaskId:[NSNumber numberWithInteger:resumeDownloadTask.taskIdentifier] keyedByRequestId:resumeTaskRequest.identifier];
@@ -276,9 +277,7 @@ expectedTotalBytes:(int64_t)expectedTotalBytes {
     }];
     if (nil == taskInfo) { return; }
     
-    [taskInfo.receivedDataProtector performWithBlock:^{
-        [taskInfo.receivedDataProtector.object appendData:data];
-    }];
+    [taskInfo.receivedData appendData:data];
 }
 
 @end
