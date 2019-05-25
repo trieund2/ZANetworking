@@ -16,16 +16,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedManager;
 
-- (NSString *)downloadTaskFromURLString:(NSString *)urlString
+- (NSURLRequest *)downloadTaskFromURLString:(NSString *)urlString
                                 headers:(NSDictionary *)header
                                priority:(ZADownloadPriority)priority
                           progressBlock:(ZAURLSessionTaskProgressBlock)progressBlock
                        destinationBlock:(ZAURLSessionDownloadTaskDestinationBlock)destinationBlock
                         completionBlock:(ZAURLSessionTaskCompletionBlock)completionBloc;
 
-- (void)resumeDownloadTaskWithIdentifier:(NSString *)identifier;
-- (void)pauseDownloadTaskWithIdentifier:(NSString *)identifier;
-- (void)cancelDownloadTaskWithIdentifier:(NSString *)identifier;
+- (void)resumeDownloadTaskByRequest:(NSURLRequest *)request;
+- (void)pauseDownloadTaskByRequest:(NSURLRequest *)request;
+- (void)cancelDownloadTaskByRequest:(NSURLRequest *)request;
 
 @end
 

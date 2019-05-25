@@ -8,20 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ZAURLSessionTaskRequest.h"
-#import "ProtectorObject.h"
-
-typedef NS_ENUM(NSInteger, ZAURLSessionTaskStatus) {
-    // Status when task has just been initialized.
-    ZAURLSessionTaskStatusInitialized = 0,
-    // Status when task runs.
-    ZAURLSessionTaskStatusRunning = 1,
-    // Status when task is paused, might be resumed later.
-    ZAURLSessionTaskStatusPaused = 2,
-    // Status when task completed, may be failed or successful.
-    ZAURLSessionTaskStatusCompleted = 3,
-    // Status when task is cancelled, can not be resumed later.
-    ZAURLSessionTaskStatusCancelled = 4
-};
+#import "ZAURLSessionTaskStatus.h"
 
 typedef NS_ENUM(NSInteger, ZAURLSessionTaskPriority) {
     ZAURLSessionTaskPriorityVeryHigh    = 0,
@@ -36,7 +23,8 @@ typedef NS_ENUM(NSInteger, ZAURLSessionTaskPriority) {
 @property (strong, nonatomic, readonly) NSMutableData *receivedData;
 @property (assign, nonatomic, readonly) ZAURLSessionTaskStatus status;
 @property (assign, nonatomic) ZAURLSessionTaskPriority priority;
-@property (strong, nonatomic, readonly) ProtectorObject<NSMutableDictionary<NSString *, ZAURLSessionTaskRequest *> *> *requestIdToTaskRequestProtector;
+@property (strong, nonatomic, readonly) NSMutableDictionary<NSURLRequest *, ZAURLSessionTaskRequest*> *requestIdToTaskRequestDownloading;
+@property (strong, nonatomic, readonly) NSMutableDictionary<NSURLRequest *, ZAURLSessionTaskRequest*> *requestToTaskRequestPause;
 
 - (instancetype)init NS_UNAVAILABLE;
 
@@ -56,15 +44,5 @@ typedef NS_ENUM(NSInteger, ZAURLSessionTaskPriority) {
  * @warning If you try to change task's status to a forbidden one, it will throw an error in debug mode.
  */
 - (void)changeStatusTo:(ZAURLSessionTaskStatus)status;
-
-- (ZAURLSessionTaskRequest *)taskRequestByRequestId:(NSString *)identifier;
-
-- (void)resumeDownloadTaskByIdentifier:(NSString *)identifier;
-
-- (void)addTaskRequest:(ZAURLSessionTaskRequest *)taskRequest;
-
-- (void)cancelTaskRequestByRequestId:(NSString *)requestId;
-
-- (NSUInteger)numberOfTaskRequests;
 
 @end

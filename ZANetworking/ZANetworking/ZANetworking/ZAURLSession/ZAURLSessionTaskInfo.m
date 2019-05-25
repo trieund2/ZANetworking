@@ -13,8 +13,6 @@
 
 @end
 
-pthread_mutex_t url_session_task_info_mutex = PTHREAD_MUTEX_INITIALIZER;
-
 @implementation ZAURLSessionTaskInfo
 
 - (instancetype)initWithDownloadTask:(NSURLSessionDownloadTask *)downloadTask
@@ -30,8 +28,7 @@ pthread_mutex_t url_session_task_info_mutex = PTHREAD_MUTEX_INITIALIZER;
         _priority = priority;
         _receivedData = [NSMutableData data];
         _status = ZAURLSessionTaskStatusInitialized;
-        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObject:taskRequest forKey:taskRequest.identifier];
-        _requestIdToTaskRequestProtector = [[ProtectorObject alloc] initFromObject:dict];
+        _requestIdToTaskRequestDownloading = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -58,49 +55,7 @@ pthread_mutex_t url_session_task_info_mutex = PTHREAD_MUTEX_INITIALIZER;
     NSAssert([self canChangeToStatus:status], @"Error: Status can not be changed");
 #endif
     if (![self canChangeToStatus:status]) { return; }
-    pthread_mutex_lock(&url_session_task_info_mutex);
     _status = status;
-    pthread_mutex_unlock(&url_session_task_info_mutex);
-}
-
-- (ZAURLSessionTaskRequest *)taskRequestByRequestId:(NSString *)identifier {
-    ZAURLSessionTaskRequest *taskRequest;
-    __weak typeof(self) weakSelf = self;
-    [self.requestIdToTaskRequestProtector performWithBlock:^{
-        [weakSelf.requestIdToTaskRequestProtector.object objectForKey:identifier];
-    }];
-    
-    return taskRequest;
-}
-
-- (void)resumeDownloadTaskByIdentifier:(NSString *)identifier {
-    __weak typeof(self) weakSelf = self;
-    [self.requestIdToTaskRequestProtector performWithBlock:^{
-        [weakSelf.requestIdToTaskRequestProtector.object removeObjectForKey:identifier];
-    }];
-}
-
-- (void)addTaskRequest:(ZAURLSessionTaskRequest *)taskRequest {
-    __weak typeof(self) weakSelf = self;
-    [self.requestIdToTaskRequestProtector performWithBlock:^{
-        weakSelf.requestIdToTaskRequestProtector.object[taskRequest.identifier] = taskRequest;
-    }];
-}
-
-- (void)cancelTaskRequestByRequestId:(NSString *)requestId {
-    __weak typeof(self) weakSelf = self;
-    [self.requestIdToTaskRequestProtector performWithBlock:^{
-        [weakSelf.requestIdToTaskRequestProtector.object removeObjectForKey:requestId];
-    }];
-}
-
-- (NSUInteger)numberOfTaskRequests {
-    __block NSUInteger count;
-    __weak typeof(self) weakSelf = self;
-    [self.requestIdToTaskRequestProtector performWithBlock:^{
-        count = weakSelf.requestIdToTaskRequestProtector.object.count;
-    }];
-    return count;
 }
 
 @end
