@@ -15,7 +15,6 @@
 		A1346B642296A1E6009E73B7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A1346B632296A1E6009E73B7 /* main.m */; };
 		A1346B6E2296A1E6009E73B7 /* ZANetworkingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A1346B6D2296A1E6009E73B7 /* ZANetworkingTests.m */; };
 		A1346B7E2296A5A7009E73B7 /* ZASessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A1346B7D2296A5A7009E73B7 /* ZASessionManager.m */; };
-		A198453A2297A1A900EC7000 /* NSURL+URIEquivalence.m in Sources */ = {isa = PBXBuildFile; fileRef = A19845392297A1A900EC7000 /* NSURL+URIEquivalence.m */; };
 		D76F76BB229795300069AD99 /* ZADownloadMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = D76F76BA229795300069AD99 /* ZADownloadMonitor.m */; };
 		D7E14A832296A9D900540DA8 /* ZATaskInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = D7E14A822296A9D900540DA8 /* ZATaskInfo.m */; };
 /* End PBXBuildFile section */
@@ -47,8 +46,6 @@
 		A1346B7D2296A5A7009E73B7 /* ZASessionManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZASessionManager.m; sourceTree = "<group>"; };
 		A1346B832296A7C3009E73B7 /* ZADownloadPriority.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZADownloadPriority.h; sourceTree = "<group>"; };
 		A1346B842296AAE5009E73B7 /* ZANetworking.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZANetworking.h; sourceTree = "<group>"; };
-		A19845382297A1A900EC7000 /* NSURL+URIEquivalence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURL+URIEquivalence.h"; sourceTree = "<group>"; };
-		A19845392297A1A900EC7000 /* NSURL+URIEquivalence.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURL+URIEquivalence.m"; sourceTree = "<group>"; };
 		C545BF092299830600304106 /* ZASessionTaskStatus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZASessionTaskStatus.h; sourceTree = "<group>"; };
 		C545BF0D22999C4300304106 /* ZATaskInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZATaskInfo.h; sourceTree = "<group>"; };
 		C545BF0E22999C8100304106 /* ZASessionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZASessionManager.h; sourceTree = "<group>"; };
@@ -139,7 +136,6 @@
 			isa = PBXGroup;
 			children = (
 				A1346B842296AAE5009E73B7 /* ZANetworking.h */,
-				A19845372297A11A00EC7000 /* Category */,
 				A1346B7F2296A69E009E73B7 /* ZACore */,
 				A1346B7B2296A26C009E73B7 /* ZAURLSession */,
 			);
@@ -166,15 +162,6 @@
 				C545BF092299830600304106 /* ZASessionTaskStatus.h */,
 			);
 			path = ZACore;
-			sourceTree = "<group>";
-		};
-		A19845372297A11A00EC7000 /* Category */ = {
-			isa = PBXGroup;
-			children = (
-				A19845382297A1A900EC7000 /* NSURL+URIEquivalence.h */,
-				A19845392297A1A900EC7000 /* NSURL+URIEquivalence.m */,
-			);
-			path = Category;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -279,7 +266,6 @@
 			files = (
 				D7E14A832296A9D900540DA8 /* ZATaskInfo.m in Sources */,
 				A1346B592296A1E5009E73B7 /* ViewController.m in Sources */,
-				A198453A2297A1A900EC7000 /* NSURL+URIEquivalence.m in Sources */,
 				A1346B7E2296A5A7009E73B7 /* ZASessionManager.m in Sources */,
 				A1346B642296A1E6009E73B7 /* main.m in Sources */,
 				D76F76BB229795300069AD99 /* ZADownloadMonitor.m in Sources */,
