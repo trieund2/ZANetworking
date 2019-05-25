@@ -141,11 +141,28 @@ static void url_session_manager_create_task_safely(dispatch_block_t _Nonnull blo
 }
 
 - (void)pauseDownloadTaskWithIdentifier:(NSString *)identifier {
+    if (!identifier) { return; }
     
+    __weak typeof(self) weakSelf = self;
+    __block NSNumber *downloadTaskId;
+    [self.requestIdToTaskIdProtector performWithBlock:^{
+        downloadTaskId = [weakSelf.requestIdToTaskIdProtector.object objectForKey:identifier];
+    }];
+    if (!downloadTaskId) { return; }
+    
+    __block ZAURLSessionTaskInfo *taskInfo;
+    [self.taskIdToTaskInfoProtector performWithBlock:^{
+        taskInfo = [weakSelf.taskIdToTaskInfoProtector.object objectForKey:downloadTaskId];
+    }];
+    if (!taskInfo) { return; }
+    
+    ZAURLSessionTaskRequest *pauseTaskRequest = [taskInfo taskRequestByIdentifier:identifier];
+    if (!pauseTaskRequest || ![pauseTaskRequest canBePaused]) { return; }
+    [pauseTaskRequest updateStatus:(kURLSessionTaskRequestPaused)];
 }
 
 - (void)cancelDownloadTaskWithIdentifier:(NSString *)identifier {
-    
+   
 }
 
 #pragma mark - Helper
