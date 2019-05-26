@@ -41,6 +41,7 @@
         _root_queue = dispatch_queue_create("com.za.zanetworking.sessionmanager.rootqueue", DISPATCH_QUEUE_SERIAL);
         _sessionDelegateQueue = [[NSOperationQueue alloc] init];
         _sessionDelegateQueue.maxConcurrentOperationCount = 1;
+        _urlRequestToTaskId = [[NSMutableDictionary alloc] init];
         _taskIdToTaskInfo = [[NSMutableDictionary alloc] init];
         _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]
                                                  delegate:self delegateQueue:_sessionDelegateQueue];
@@ -78,7 +79,7 @@
             taskInfo = [[ZATaskInfo alloc] initWithDownloadTask:downloadTask taskRequest:downloadMonitor];
             weakSelf.taskIdToTaskInfo[[NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier]] = taskInfo;
             [downloadTask resume];
-            [taskInfo canChangeToStatus:(ZASessionTaskStatusRunning)];
+            [taskInfo changeStatusTo:(ZASessionTaskStatusRunning)];
         }
         
         taskInfo.requestToDownloadMonitorDownloading[request] = downloadMonitor;
@@ -185,7 +186,6 @@
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     request.timeoutInterval = [self getTimeoutInterval];
-    request.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
     
     if (header) {
         for (NSString* key in header.allKeys) {
@@ -201,7 +201,7 @@
 }
 
 - (NSTimeInterval)getTimeoutInterval {
-    return 5.0;
+    return 500.0;
 }
 
 #pragma mark - NSURLSessionDownloadDelegate
