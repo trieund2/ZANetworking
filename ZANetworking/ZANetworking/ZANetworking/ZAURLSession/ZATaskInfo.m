@@ -27,7 +27,7 @@
         _downloadTask = downloadTask;
         _priority = priority;
         _receivedData = [NSMutableData data];
-        _status = ZAURLSessionTaskStatusInitialized;
+        _status = ZASessionTaskStatusInitialized;
         _requestToDownloadMonitorDownloading = [[NSMutableDictionary alloc] init];
     }
     return self;
@@ -35,17 +35,17 @@
 
 - (BOOL)canChangeToStatus:(ZASessionTaskStatus)status {
     switch (_status) {
-        case ZAURLSessionTaskStatusInitialized:
+        case ZASessionTaskStatusInitialized:
             return YES;
             
-        case ZAURLSessionTaskStatusRunning:
-            return (status == ZAURLSessionTaskStatusPaused) || (status == ZAURLSessionTaskStatusCompleted) || (status == ZAURLSessionTaskStatusCancelled);
+        case ZASessionTaskStatusRunning:
+            return (status == ZASessionTaskStatusPaused) || (status == ZASessionTaskStatusCompleted) || (status == ZASessionTaskStatusCancelled);
             
-        case ZAURLSessionTaskStatusPaused:
-            return (status == ZAURLSessionTaskStatusRunning) || (status == ZAURLSessionTaskStatusCompleted) || (status == ZAURLSessionTaskStatusCancelled);
+        case ZASessionTaskStatusPaused:
+            return (status == ZASessionTaskStatusRunning) || (status == ZASessionTaskStatusCompleted) || (status == ZASessionTaskStatusCancelled);
             
-        case ZAURLSessionTaskStatusCompleted:
-        case ZAURLSessionTaskStatusCancelled:
+        case ZASessionTaskStatusCompleted:
+        case ZASessionTaskStatusCancelled:
             return NO;
     }
 }

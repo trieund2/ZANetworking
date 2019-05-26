@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ZASessionManager : NSObject <NSURLSessionDataDelegate, NSURLSessionDownloadDelegate>
+@interface ZASessionManager : NSObject <NSURLSessionDownloadDelegate>
 
 + (instancetype)sharedManager;
 

@@ -15,6 +15,9 @@
 		A1346B642296A1E6009E73B7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A1346B632296A1E6009E73B7 /* main.m */; };
 		A1346B6E2296A1E6009E73B7 /* ZANetworkingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A1346B6D2296A1E6009E73B7 /* ZANetworkingTests.m */; };
 		A1346B7E2296A5A7009E73B7 /* ZASessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A1346B7D2296A5A7009E73B7 /* ZASessionManager.m */; };
+		C51C99D6229A8C71007A04FA /* DownloadTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C51C99D4229A8C71007A04FA /* DownloadTableViewCell.m */; };
+		C51C99D7229A8C71007A04FA /* DownloadTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C51C99D5229A8C71007A04FA /* DownloadTableViewCell.xib */; };
+		C51C99DA229A916F007A04FA /* TrackDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = C51C99D9229A916F007A04FA /* TrackDownload.m */; };
 		D76F76BB229795300069AD99 /* ZADownloadMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = D76F76BA229795300069AD99 /* ZADownloadMonitor.m */; };
 		D76F76BF2297E02B0069AD99 /* ZANetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D76F76BE2297E02B0069AD99 /* ZANetworkManager.m */; };
 		D76F76C42297E1CA0069AD99 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = D76F76C32297E1CA0069AD99 /* Reachability.m */; };
@@ -49,6 +52,11 @@
 		A1346B7D2296A5A7009E73B7 /* ZASessionManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZASessionManager.m; sourceTree = "<group>"; };
 		A1346B832296A7C3009E73B7 /* ZADownloadPriority.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZADownloadPriority.h; sourceTree = "<group>"; };
 		A1346B842296AAE5009E73B7 /* ZANetworking.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZANetworking.h; sourceTree = "<group>"; };
+		C51C99D3229A8C71007A04FA /* DownloadTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DownloadTableViewCell.h; sourceTree = "<group>"; };
+		C51C99D4229A8C71007A04FA /* DownloadTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DownloadTableViewCell.m; sourceTree = "<group>"; };
+		C51C99D5229A8C71007A04FA /* DownloadTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DownloadTableViewCell.xib; sourceTree = "<group>"; };
+		C51C99D8229A916F007A04FA /* TrackDownload.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TrackDownload.h; sourceTree = "<group>"; };
+		C51C99D9229A916F007A04FA /* TrackDownload.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TrackDownload.m; sourceTree = "<group>"; };
 		C545BF092299830600304106 /* ZASessionTaskStatus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZASessionTaskStatus.h; sourceTree = "<group>"; };
 		C545BF0D22999C4300304106 /* ZATaskInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZATaskInfo.h; sourceTree = "<group>"; };
 		C545BF0E22999C8100304106 /* ZASessionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZASessionManager.h; sourceTree = "<group>"; };
@@ -105,9 +113,9 @@
 			children = (
 				D76F76C02297E1B30069AD99 /* ThirdParty */,
 				A1346B7A2296A263009E73B7 /* ZANetworking */,
-				A1346B782296A226009E73B7 /* Supports */,
-				A1346B792296A245009E73B7 /* AppDelegate */,
 				C5F51004229A4036004E4FA5 /* TestDownload */,
+				A1346B792296A245009E73B7 /* AppDelegate */,
+				A1346B782296A226009E73B7 /* Supports */,
 			);
 			path = ZANetworking;
 			sourceTree = "<group>";
@@ -177,10 +185,15 @@
 		C5F51004229A4036004E4FA5 /* TestDownload */ = {
 			isa = PBXGroup;
 			children = (
-				A1346B572296A1E5009E73B7 /* ViewController.h */,
-				A1346B582296A1E5009E73B7 /* ViewController.m */,
 				A1346B5A2296A1E5009E73B7 /* Main.storyboard */,
 				A1346B5F2296A1E6009E73B7 /* LaunchScreen.storyboard */,
+				A1346B572296A1E5009E73B7 /* ViewController.h */,
+				A1346B582296A1E5009E73B7 /* ViewController.m */,
+				C51C99D3229A8C71007A04FA /* DownloadTableViewCell.h */,
+				C51C99D4229A8C71007A04FA /* DownloadTableViewCell.m */,
+				C51C99D5229A8C71007A04FA /* DownloadTableViewCell.xib */,
+				C51C99D8229A916F007A04FA /* TrackDownload.h */,
+				C51C99D9229A916F007A04FA /* TrackDownload.m */,
 			);
 			path = TestDownload;
 			sourceTree = "<group>";
@@ -291,6 +304,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1346B612296A1E6009E73B7 /* LaunchScreen.storyboard in Resources */,
+				C51C99D7229A8C71007A04FA /* DownloadTableViewCell.xib in Resources */,
 				A1346B5E2296A1E6009E73B7 /* Assets.xcassets in Resources */,
 				A1346B5C2296A1E5009E73B7 /* Main.storyboard in Resources */,
 			);
@@ -313,10 +327,12 @@
 				D7E14A832296A9D900540DA8 /* ZATaskInfo.m in Sources */,
 				A1346B592296A1E5009E73B7 /* ViewController.m in Sources */,
 				A1346B7E2296A5A7009E73B7 /* ZASessionManager.m in Sources */,
+				C51C99DA229A916F007A04FA /* TrackDownload.m in Sources */,
 				A1346B642296A1E6009E73B7 /* main.m in Sources */,
 				D76F76BB229795300069AD99 /* ZADownloadMonitor.m in Sources */,
 				D76F76BF2297E02B0069AD99 /* ZANetworkManager.m in Sources */,
 				D76F76BB229795300069AD99 /* ZADownloadMonitor.m in Sources */,
+				C51C99D6229A8C71007A04FA /* DownloadTableViewCell.m in Sources */,
 				D76F76C42297E1CA0069AD99 /* Reachability.m in Sources */,
 				A1346B562296A1E5009E73B7 /* AppDelegate.m in Sources */,
 			);

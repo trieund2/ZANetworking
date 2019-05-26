@@ -11,15 +11,15 @@
 
 typedef NS_ENUM(NSInteger, ZASessionTaskStatus) {
     // Status when task has just been initialized.
-    ZAURLSessionTaskStatusInitialized = 0,
+    ZASessionTaskStatusInitialized  = 0,
     // Status when task runs.
-    ZAURLSessionTaskStatusRunning = 1,
+    ZASessionTaskStatusRunning      = 1,
     // Status when task is paused, might be resumed later.
-    ZAURLSessionTaskStatusPaused = 2,
+    ZASessionTaskStatusPaused       = 2,
     // Status when task completed, may be failed or successful.
-    ZAURLSessionTaskStatusCompleted = 3,
+    ZASessionTaskStatusCompleted    = 3,
     // Status when task is cancelled, can not be resumed later.
-    ZAURLSessionTaskStatusCancelled = 4
+    ZASessionTaskStatusCancelled    = 4
 };
 
 #endif /* ZAURLSessionTaskStatus_h */

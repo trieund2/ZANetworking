@@ -62,6 +62,10 @@
     
     dispatch_sync(self.root_queue, ^{
         request = [weakSelf buildURLRequestFromURLString:urlString headers:header];
+        if (nil == request) {
+            return;
+        }
+        
         ZADownloadMonitor *downloadMonitor = [[ZADownloadMonitor alloc] initWithProgressBlock:progressBlock
                                                                              destinationBlock:destinationBlock
                                                                               completionBlock:completionBlock];
@@ -74,7 +78,7 @@
             taskInfo = [[ZATaskInfo alloc] initWithDownloadTask:downloadTask taskRequest:downloadMonitor];
             weakSelf.taskIdToTaskInfo[[NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier]] = taskInfo;
             [downloadTask resume];
-            [taskInfo canChangeToStatus:(ZAURLSessionTaskStatusRunning)];
+            [taskInfo canChangeToStatus:(ZASessionTaskStatusRunning)];
         }
         
         taskInfo.requestToDownloadMonitorDownloading[request] = downloadMonitor;
@@ -98,7 +102,7 @@
             weakSelf.taskIdToTaskInfo[[NSNumber numberWithUnsignedInteger:resumeTask.taskIdentifier]] = resumeTaskInfo;
             weakSelf.urlRequestToTaskId[request] = [NSNumber numberWithUnsignedInteger:resumeTask.taskIdentifier];
             [resumeTask resume];
-            [resumeTaskInfo canChangeToStatus:(ZAURLSessionTaskStatusRunning)];
+            [resumeTaskInfo canChangeToStatus:(ZASessionTaskStatusRunning)];
         }
         
         if (taskInfo.requestToDownloadMonitorPause.count == 0
@@ -181,6 +185,7 @@
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     request.timeoutInterval = [self getTimeoutInterval];
+    request.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
     
     if (header) {
         for (NSString* key in header.allKeys) {
@@ -196,7 +201,7 @@
 }
 
 - (NSTimeInterval)getTimeoutInterval {
-    return 1.0;
+    return 5.0;
 }
 
 #pragma mark - NSURLSessionDownloadDelegate
@@ -275,16 +280,23 @@ expectedTotalBytes:(int64_t)expectedTotalBytes {
     });
 }
 
-#pragma mark - NSURLSessionDataDelegate
+#pragma mark - NSURLSessionTaskDelegate
 
-- (void)URLSession:(NSURLSession *)session
-          dataTask:(NSURLSessionDataTask *)dataTask
-    didReceiveData:(NSData *)data {
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     __weak typeof(self) weakSelf = self;
     
     dispatch_async(self.root_queue, ^{
-        ZATaskInfo *taskInfo = [weakSelf.taskIdToTaskInfo objectForKey:[NSNumber numberWithUnsignedInteger:dataTask.taskIdentifier]];
-        [taskInfo.receivedData appendData:data];
+        if (error) {
+            ZATaskInfo *taskInfo = [weakSelf taskInfoForURLRequest:task.originalRequest];
+            for (ZADownloadMonitor *downloadMonitor in taskInfo.requestToDownloadMonitorDownloading.allValues) {
+                downloadMonitor.completionBlock(task.response, error);
+            }
+            
+            NSData *resumeData = error.userInfo[NSURLSessionDownloadTaskResumeData];
+            if (resumeData) {
+                taskInfo.receivedData = (NSMutableData *)resumeData;
+            }
+        }
     });
 }
 

@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DownloadTableViewCell.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, DownloadTableViewCellDelegate>
 
 
 @end
