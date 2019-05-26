@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)sharedManager;
 
 - (NSURLRequest *)downloadTaskFromURLString:(NSString *)urlString
-                                headers:(NSDictionary *)header
+                                headers:(nullable NSDictionary<NSString *, NSString *> *)header
                                priority:(ZADownloadPriority)priority
                           progressBlock:(ZAURLSessionTaskProgressBlock)progressBlock
                        destinationBlock:(ZAURLSessionDownloadTaskDestinationBlock)destinationBlock

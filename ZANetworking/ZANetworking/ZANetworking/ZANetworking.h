@@ -10,6 +10,6 @@
 #define ZANetworking_h
 
 #import "ZADownloadPriority.h"
-#import "ZAURLSessionManager.h"
+#import "ZASessionManager.h"
 
 #endif /* ZANetworking_h */
