@@ -14,6 +14,7 @@ typedef void (^ZAURLSessionTaskCompletionBlock)(NSURLResponse *response, NSError
 
 @interface ZADownloadMonitor : NSObject
 
+@property (copy, nonatomic, readonly) NSString *identifier;
 @property (copy, nonatomic, readonly) ZAURLSessionTaskProgressBlock progressBlock;
 @property (copy, nonatomic, readonly) ZAURLSessionDownloadTaskDestinationBlock destinationBlock;
 @property (copy, nonatomic, readonly) ZAURLSessionTaskCompletionBlock completionBlock;

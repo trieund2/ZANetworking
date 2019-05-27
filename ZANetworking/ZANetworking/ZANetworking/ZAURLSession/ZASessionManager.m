@@ -15,6 +15,7 @@
 @property (readonly, nonatomic) NSOperationQueue *sessionDelegateQueue;
 @property (readonly, nonatomic) NSMutableDictionary<NSNumber*, ZATaskInfo*> *taskIdToTaskInfo;
 @property (readonly, nonatomic) NSMutableDictionary<NSURLRequest*, NSNumber*> *urlRequestToTaskId;
+@property (readonly, nonatomic) NSMutableDictionary<NSString*, ZATaskInfo*> *downloadMonitorIdToTaskInfo;
 @end
 
 #pragma mark -
@@ -44,7 +45,8 @@
         _urlRequestToTaskId = [[NSMutableDictionary alloc] init];
         _taskIdToTaskInfo = [[NSMutableDictionary alloc] init];
         _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]
-                                                 delegate:self delegateQueue:_sessionDelegateQueue];
+                                                 delegate:self
+                                            delegateQueue:_sessionDelegateQueue];
     }
     
     return self;

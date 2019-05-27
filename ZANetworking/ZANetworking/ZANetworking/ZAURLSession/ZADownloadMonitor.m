@@ -25,6 +25,7 @@ pthread_mutex_t url_session_task_request_mutex = PTHREAD_MUTEX_INITIALIZER;
                      destinationBlock:(ZAURLSessionDownloadTaskDestinationBlock)destinationBlock
                       completionBlock:(ZAURLSessionTaskCompletionBlock)completionBlock {
     if (self = [super init]) {
+        _identifier = NSUUID.UUID.UUIDString;
         _progressBlock = progressBlock;
         _destinationBlock = destinationBlock;
         _completionBlock = completionBlock;

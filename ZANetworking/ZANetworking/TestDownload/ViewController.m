@@ -39,9 +39,9 @@
 - (void)initDataSource {
     _trackDownloads = [[NSMutableArray alloc] init];
     
-    TrackDownload *track1 = [[TrackDownload alloc] initFromURLString:@"https://firebasestorage.googleapis.com/v0/b/hismart-d1acf.appspot.com/o/Dung-Yeu-Nua-Em-Met-Roi-MIN.mp3?alt=media&token=c396378c-a166-4f26-950e-48eeefec13a6" trackName:@"Đừng yên nữa em mệt rồi"];
-    TrackDownload *track2 = [[TrackDownload alloc] initFromURLString:@"https://firebasestorage.googleapis.com/v0/b/hismart-d1acf.appspot.com/o/Best%20Music%20Mix%202019%20%E2%99%AB%E2%99%AB%20Gaming%20Music%20%E2%99%AB%20Trap%20House%20Dubstep%20EDM.mp3?alt=media&token=95f7bce8-9cbd-41f5-a578-31439037724f" trackName:@"Music Mix"];
-    TrackDownload *track3 = [[TrackDownload alloc] initFromURLString:@"https://firebasestorage.googleapis.com/v0/b/hismart-d1acf.appspot.com/o/Best%20Music%20Mix%202019%20%E2%99%AB%E2%99%AB%20Gaming%20Music%20%E2%99%AB%20Trap%20House%20Dubstep%20EDM.mp3?alt=media&token=95f7bce8-9cbd-41f5-a578-31439037724f" trackName:@"Music Mix"];
+    TrackDownload *track1 = [[TrackDownload alloc] initFromURLString:@"https://firebasestorage.googleapis.com/v0/b/bustracking-1524793108793.appspot.com/o/Dung-Yeu-Nua-Em-Met-Roi-MIN.mp3?alt=media&token=6c7578e0-a8cf-4a7b-988f-b719e013b50d" trackName:@"Đừng yên nữa em mệt rồi"];
+    TrackDownload *track2 = [[TrackDownload alloc] initFromURLString:@"https://firebasestorage.googleapis.com/v0/b/bustracking-1524793108793.appspot.com/o/30%20Minute%20Deep%20Sleep%20Music%20Calming%20Music%20Relaxing%20Music%20Soothing%20Music%20Calming%20Music%20%E2%98%AF426B.mp3?alt=media&token=6ffe629d-f6b3-42a6-830a-116cb6224e17" trackName:@"30 Minute Deep Sleep Music"];
+    TrackDownload *track3 = [[TrackDownload alloc] initFromURLString:@"https://firebasestorage.googleapis.com/v0/b/bustracking-1524793108793.appspot.com/o/30%20Minute%20Deep%20Sleep%20Music%20Calming%20Music%20Relaxing%20Music%20Soothing%20Music%20Calming%20Music%20%E2%98%AF426B.mp3?alt=media&token=6ffe629d-f6b3-42a6-830a-116cb6224e17" trackName:@"30 Minute Deep Sleep Music"];
     
     [self.trackDownloads addObject:track1];
     [self.trackDownloads addObject:track2];
