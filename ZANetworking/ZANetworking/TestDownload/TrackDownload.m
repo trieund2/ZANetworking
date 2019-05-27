@@ -35,13 +35,14 @@
             return YES;
             
         case ZASessionTaskStatusRunning:
-            return (status == ZASessionTaskStatusPaused) || (status == ZASessionTaskStatusCompleted) || (status == ZASessionTaskStatusCancelled);
+            return (status == ZASessionTaskStatusPaused) || (status == ZASessionTaskStatusSuccessed) || (status == ZASessionTaskStatusCancelled);
             
         case ZASessionTaskStatusPaused:
-            return (status == ZASessionTaskStatusRunning) || (status == ZASessionTaskStatusCompleted) || (status == ZASessionTaskStatusCancelled);
+            return (status == ZASessionTaskStatusRunning) || (status == ZASessionTaskStatusSuccessed) || (status == ZASessionTaskStatusCancelled);
             
-        case ZASessionTaskStatusCompleted:
+        case ZASessionTaskStatusSuccessed:
         case ZASessionTaskStatusCancelled:
+        case ZASessionTaskStatusFailed:
             return NO;
     }
 }

@@ -93,7 +93,7 @@
     } destinationBlock:^NSURL *(NSURL *location) {
         return [self localFilePathForURL:[NSURL URLWithString:trackDownload.urlString]];
     } completionBlock:^(NSURLResponse *response, NSError *error) {
-        trackDownload.status = ZASessionTaskStatusCompleted;
+        trackDownload.status = ZASessionTaskStatusSuccessed;
     }];
 }
 

@@ -65,7 +65,7 @@
             [self.cancelButton setEnabled:NO];
             break;
             
-        case ZASessionTaskStatusCompleted:
+        case ZASessionTaskStatusSuccessed:
             self.downloadStatusLabel.text = @"Complete";
             [self.startDownloadButton setEnabled:YES];
             [self.pauseButton setEnabled:NO];
