@@ -13,8 +13,7 @@
 @property (readonly, nonatomic) NSURLSession *session;
 @property (readonly, nonatomic) dispatch_queue_t root_queue;
 @property (readonly, nonatomic) NSOperationQueue *sessionDelegateQueue;
-@property (readonly, nonatomic) NSMutableDictionary<NSNumber*, ZATaskInfo*> *taskIdToTaskInfo;
-@property (readonly, nonatomic) NSMutableDictionary<NSURLRequest*, NSNumber*> *urlRequestToTaskId;
+@property (readonly, nonatomic) NSMutableDictionary<NSURLRequest*, ZATaskInfo*> *urlRequestToTaskInfo;
 @property (readonly, nonatomic) NSMutableDictionary<NSString*, ZATaskInfo*> *downloadMonitorIdToTaskInfo;
 @end
 
@@ -42,8 +41,7 @@
         _root_queue = dispatch_queue_create("com.za.zanetworking.sessionmanager.rootqueue", DISPATCH_QUEUE_SERIAL);
         _sessionDelegateQueue = [[NSOperationQueue alloc] init];
         _sessionDelegateQueue.maxConcurrentOperationCount = 1;
-        _urlRequestToTaskId = [[NSMutableDictionary alloc] init];
-        _taskIdToTaskInfo = [[NSMutableDictionary alloc] init];
+        _urlRequestToTaskInfo = [[NSMutableDictionary alloc] init];
         _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]
                                                  delegate:self
                                             delegateQueue:_sessionDelegateQueue];
@@ -54,79 +52,76 @@
 
 #pragma mark - Interface methods
 
-- (NSURLRequest *)downloadTaskFromURLString:(NSString *)urlString
+- (NSString *)downloadTaskFromURLString:(NSString *)urlString
                                     headers:(nullable NSDictionary<NSString *, NSString *> *)header
                                    priority:(ZADownloadPriority)priority
                               progressBlock:(ZAURLSessionTaskProgressBlock)progressBlock
                            destinationBlock:(ZAURLSessionDownloadTaskDestinationBlock)destinationBlock
                             completionBlock:(ZAURLSessionTaskCompletionBlock)completionBlock {
-    __block NSURLRequest *request = nil;
+     __block ZADownloadMonitor *downloadMonitor;
     __weak typeof(self) weakSelf = self;
     
     dispatch_sync(self.root_queue, ^{
-        request = [weakSelf buildURLRequestFromURLString:urlString headers:header];
-        if (nil == request) {
-            return;
-        }
+        NSURLRequest *request = [weakSelf buildURLRequestFromURLString:urlString headers:header];
+        if (nil == request) { return; }
         
-        ZADownloadMonitor *downloadMonitor = [[ZADownloadMonitor alloc] initWithProgressBlock:progressBlock
+        downloadMonitor = [[ZADownloadMonitor alloc] initWithProgressBlock:progressBlock
                                                                              destinationBlock:destinationBlock
                                                                               completionBlock:completionBlock];
         NSURLSessionDownloadTask *downloadTask = nil;
-        ZATaskInfo* taskInfo = [weakSelf taskInfoForURLRequest:request];
+        ZATaskInfo* taskInfo = [weakSelf.urlRequestToTaskInfo objectForKey:request];
         if (taskInfo) {
             downloadTask = taskInfo.downloadTask;
         } else {
             downloadTask = [weakSelf.session downloadTaskWithRequest:request];
             taskInfo = [[ZATaskInfo alloc] initWithDownloadTask:downloadTask taskRequest:downloadMonitor];
-            weakSelf.taskIdToTaskInfo[[NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier]] = taskInfo;
+            weakSelf.downloadMonitorIdToTaskInfo[downloadMonitor.identifier] = taskInfo;
             [downloadTask resume];
             [taskInfo changeStatusTo:(ZASessionTaskStatusRunning)];
         }
         
-        taskInfo.requestToDownloadMonitorDownloading[request] = downloadMonitor;
-        weakSelf.urlRequestToTaskId[request] = [NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier];
+        taskInfo.monitorIdToDownloadMonitorDownloading[downloadMonitor.identifier] = downloadMonitor;
+        weakSelf.urlRequestToTaskInfo[request] = taskInfo;
     });
     
-    return request;
+    return downloadMonitor.identifier;
 }
 
-- (void)resumeDownloadTaskByRequest:(NSURLRequest *)request {
+- (void)resumeDownloadTaskByDownloadMonitorId:(NSString *)monitorId {
     __weak typeof(self) weakSelf = self;
     
     dispatch_async(self.root_queue, ^{
-        ZATaskInfo *taskInfo = [weakSelf taskInfoForURLRequest:request];
-        ZADownloadMonitor *resumeDownloadMonitor = taskInfo.requestToDownloadMonitorPause[request];
+        ZATaskInfo *taskInfo = [weakSelf.downloadMonitorIdToTaskInfo objectForKey:monitorId];
+        ZADownloadMonitor *resumeDownloadMonitor = taskInfo.monitorIdToDownloadMonitorPause[monitorId];
         
         if (resumeDownloadMonitor) {
-            [taskInfo.requestToDownloadMonitorPause removeObjectForKey:request];
+            [taskInfo.monitorIdToDownloadMonitorPause removeObjectForKey:monitorId];
             NSURLSessionDownloadTask *resumeTask = [weakSelf.session downloadTaskWithResumeData:taskInfo.receivedData];
             ZATaskInfo *resumeTaskInfo = [[ZATaskInfo alloc] initWithDownloadTask:resumeTask taskRequest:resumeDownloadMonitor];
-            weakSelf.taskIdToTaskInfo[[NSNumber numberWithUnsignedInteger:resumeTask.taskIdentifier]] = resumeTaskInfo;
-            weakSelf.urlRequestToTaskId[request] = [NSNumber numberWithUnsignedInteger:resumeTask.taskIdentifier];
+            weakSelf.urlRequestToTaskInfo[monitorId] = resumeTaskInfo;
             [resumeTask resume];
             [resumeTaskInfo canChangeToStatus:(ZASessionTaskStatusRunning)];
         }
         
-        if (taskInfo.requestToDownloadMonitorPause.count == 0
-            && taskInfo.requestToDownloadMonitorDownloading.count == 0) {
+        if (taskInfo.monitorIdToDownloadMonitorPause.count == 0
+            && taskInfo.monitorIdToDownloadMonitorDownloading.count == 0) {
             [taskInfo.downloadTask cancel];
-            [weakSelf removeDownloadTaskByRequest:request];
+
         }
     });
 }
 
-- (void)pauseDownloadTaskByRequest:(NSURLRequest *)request {
+- (void)pauseDownloadTaskByDownloadMonitorId:(NSString *)monitorId {
     __weak typeof(self) weakSelf = self;
     
     dispatch_async(self.root_queue, ^{
-        ZATaskInfo *taskInfo = [weakSelf taskInfoForURLRequest:request];
-        ZADownloadMonitor *pauseDownloadMonitor = taskInfo.requestToDownloadMonitorDownloading[request];
+        ZATaskInfo *taskInfo = [weakSelf.downloadMonitorIdToTaskInfo objectForKey:monitorId];
+        ZADownloadMonitor *pauseDownloadMonitor = taskInfo.monitorIdToDownloadMonitorDownloading[monitorId];
         if (pauseDownloadMonitor) {
-            [taskInfo.requestToDownloadMonitorDownloading removeObjectForKey:request];
-            taskInfo.requestToDownloadMonitorPause[request] = pauseDownloadMonitor;
+            [taskInfo.monitorIdToDownloadMonitorDownloading removeObjectForKey:monitorId];
+            taskInfo.monitorIdToDownloadMonitorPause[monitorId] = pauseDownloadMonitor;
             
-            if (taskInfo.requestToDownloadMonitorDownloading.count == 0) {
+            if (taskInfo.monitorIdToDownloadMonitorDownloading.count == 0) {
                 [taskInfo.downloadTask cancelByProducingResumeData:^(NSData * _Nullable resumeData) {
                     if (resumeData) {
                         taskInfo.receivedData = (NSMutableData *)resumeData;
@@ -137,44 +132,22 @@
     });
 }
 
-- (void)cancelDownloadTaskByRequest:(NSURLRequest *)request {
+- (void)cancelDownloadTaskByMonitorId:(NSString *)monitorId {
     __weak typeof(self) weakSelf = self;
     
     dispatch_async(self.root_queue, ^{
-        ZATaskInfo *taskInfo = [weakSelf taskInfoForURLRequest:request];
-        ZADownloadMonitor *cancelRequest = taskInfo.requestToDownloadMonitorPause[request];
+        ZATaskInfo *taskInfo = [weakSelf.downloadMonitorIdToTaskInfo objectForKey:monitorId];
+        ZADownloadMonitor *cancelRequest = taskInfo.monitorIdToDownloadMonitorPause[monitorId];
         
         if (cancelRequest) {
-            [taskInfo.requestToDownloadMonitorDownloading removeObjectForKey:request];
+            [taskInfo.monitorIdToDownloadMonitorDownloading removeObjectForKey:monitorId];
             
-            if (taskInfo.requestToDownloadMonitorPause.count == 0
-                && taskInfo.requestToDownloadMonitorDownloading.count == 0) {
+            if (taskInfo.monitorIdToDownloadMonitorPause.count == 0
+                && taskInfo.monitorIdToDownloadMonitorDownloading.count == 0) {
                 [taskInfo.downloadTask cancel];
-                [weakSelf removeDownloadTaskByRequest:request];
+                
             }
         }
-    });
-}
-
-#pragma mark - DownloadTask Helper
-
-- (nullable ZATaskInfo *)taskInfoForURLRequest:(NSURLRequest *)request {
-    NSNumber *taskId = [self.urlRequestToTaskId objectForKey:request];
-    if (taskId) {
-        return [self.taskIdToTaskInfo objectForKey:taskId];
-    }
-    return NULL;
-}
-
-- (void)removeDownloadTaskByRequest:(NSURLRequest *)request {
-    __weak typeof(self) weakSelf = self;
-    
-    dispatch_async(self.root_queue, ^{
-        NSNumber *taskId = [weakSelf.urlRequestToTaskId objectForKey:request];
-        if (taskId) {
-            [weakSelf.taskIdToTaskInfo removeObjectForKey:taskId];
-        }
-        [weakSelf.urlRequestToTaskId removeObjectForKey:request];
     });
 }
 
@@ -214,9 +187,9 @@ didFinishDownloadingToURL:(NSURL *)location {
     __weak typeof(self) weakSelf = self;
     
     dispatch_async(self.root_queue, ^{
-        ZATaskInfo *taskInfo = [weakSelf.taskIdToTaskInfo objectForKey:[NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier]];
+        ZATaskInfo *taskInfo = [weakSelf.urlRequestToTaskInfo objectForKey:downloadTask.originalRequest];
         if (taskInfo) {
-            for (ZADownloadMonitor *downloadMonitor in taskInfo.requestToDownloadMonitorDownloading.allValues) {
+            for (ZADownloadMonitor *downloadMonitor in taskInfo.monitorIdToDownloadMonitorDownloading.allValues) {
                 if (downloadMonitor.completionBlock) {
                     downloadMonitor.completionBlock(downloadTask.response, downloadTask.error);
                 }
@@ -230,7 +203,7 @@ didFinishDownloadingToURL:(NSURL *)location {
                 }
             }
             
-            if (taskInfo.requestToDownloadMonitorDownloading.count == 0 && taskInfo.requestToDownloadMonitorPause.count == 0) {
+            if (taskInfo.monitorIdToDownloadMonitorDownloading.count == 0 && taskInfo.monitorIdToDownloadMonitorPause.count == 0) {
                 
             }
         }
@@ -249,9 +222,9 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     progress.completedUnitCount = totalBytesWritten;
     
     dispatch_async(self.root_queue, ^{
-        ZATaskInfo *taskInfo = [weakSelf.taskIdToTaskInfo objectForKey:[NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier]];
+        ZATaskInfo *taskInfo = [weakSelf.urlRequestToTaskInfo objectForKey:downloadTask.originalRequest];
         if (taskInfo) {
-            for (ZADownloadMonitor *downloadMonitor in taskInfo.requestToDownloadMonitorDownloading.allValues) {
+            for (ZADownloadMonitor *downloadMonitor in taskInfo.monitorIdToDownloadMonitorDownloading.allValues) {
                 if (downloadMonitor.progressBlock) {
                     downloadMonitor.progressBlock(progress);
                 }
@@ -271,9 +244,9 @@ expectedTotalBytes:(int64_t)expectedTotalBytes {
     progress.completedUnitCount = fileOffset;
     
     dispatch_async(self.root_queue, ^{
-        ZATaskInfo *taskInfo = [weakSelf.taskIdToTaskInfo objectForKey:[NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier]];
+        ZATaskInfo *taskInfo = [weakSelf.urlRequestToTaskInfo objectForKey:downloadTask.originalRequest];
         if (taskInfo) {
-            for (ZADownloadMonitor *downloadMonitor in taskInfo.requestToDownloadMonitorDownloading.allValues) {
+            for (ZADownloadMonitor *downloadMonitor in taskInfo.monitorIdToDownloadMonitorDownloading.allValues) {
                 if (downloadMonitor.progressBlock) {
                     downloadMonitor.progressBlock(progress);
                 }
@@ -289,8 +262,8 @@ expectedTotalBytes:(int64_t)expectedTotalBytes {
     
     dispatch_async(self.root_queue, ^{
         if (error) {
-            ZATaskInfo *taskInfo = [weakSelf taskInfoForURLRequest:task.originalRequest];
-            for (ZADownloadMonitor *downloadMonitor in taskInfo.requestToDownloadMonitorDownloading.allValues) {
+            ZATaskInfo *taskInfo = [weakSelf.urlRequestToTaskInfo objectForKey:task.originalRequest];
+            for (ZADownloadMonitor *downloadMonitor in taskInfo.monitorIdToDownloadMonitorDownloading.allValues) {
                 downloadMonitor.completionBlock(task.response, error);
             }
             

@@ -28,7 +28,7 @@
         _priority = priority;
         _receivedData = [NSMutableData data];
         _status = ZASessionTaskStatusInitialized;
-        _requestToDownloadMonitorDownloading = [[NSMutableDictionary alloc] init];
+        _monitorIdToDownloadMonitorDownloading = [[NSMutableDictionary alloc] init];
     }
     return self;
 }

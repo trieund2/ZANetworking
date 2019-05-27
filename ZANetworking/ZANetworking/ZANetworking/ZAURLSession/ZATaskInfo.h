@@ -17,8 +17,8 @@
 @property (strong, nonatomic,) NSMutableData *receivedData;
 @property (assign, nonatomic) ZASessionTaskStatus status;
 @property (assign, nonatomic) ZADownloadPriority priority;
-@property (strong, nonatomic, readonly) NSMutableDictionary<NSURLRequest *, ZADownloadMonitor*> *requestToDownloadMonitorDownloading;
-@property (strong, nonatomic, readonly) NSMutableDictionary<NSURLRequest *, ZADownloadMonitor*> *requestToDownloadMonitorPause;
+@property (strong, nonatomic, readonly) NSMutableDictionary<NSString*, ZADownloadMonitor*> *monitorIdToDownloadMonitorDownloading;
+@property (strong, nonatomic, readonly) NSMutableDictionary<NSString*, ZADownloadMonitor*> *monitorIdToDownloadMonitorPause;
 
 - (instancetype)init NS_UNAVAILABLE;
 
