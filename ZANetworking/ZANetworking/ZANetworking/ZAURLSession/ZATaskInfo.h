@@ -17,6 +17,7 @@
 @property (strong, nonatomic,) NSMutableData *receivedData;
 @property (assign, nonatomic) ZASessionTaskStatus status;
 @property (assign, nonatomic) ZADownloadPriority priority;
+@property (strong, nonatomic) NSURL *completeFileLocation;
 @property (strong, nonatomic, readonly) NSMutableDictionary<NSString*, ZADownloadMonitor*> *monitorIdToDownloadMonitorDownloading;
 @property (strong, nonatomic, readonly) NSMutableDictionary<NSString*, ZADownloadMonitor*> *monitorIdToDownloadMonitorPause;
 

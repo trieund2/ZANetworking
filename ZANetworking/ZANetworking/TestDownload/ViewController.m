@@ -42,10 +42,14 @@
     TrackDownload *track1 = [[TrackDownload alloc] initFromURLString:@"https://firebasestorage.googleapis.com/v0/b/bustracking-1524793108793.appspot.com/o/Dung-Yeu-Nua-Em-Met-Roi-MIN.mp3?alt=media&token=6c7578e0-a8cf-4a7b-988f-b719e013b50d" trackName:@"Đừng yên nữa em mệt rồi"];
     TrackDownload *track2 = [[TrackDownload alloc] initFromURLString:@"https://firebasestorage.googleapis.com/v0/b/bustracking-1524793108793.appspot.com/o/30%20Minute%20Deep%20Sleep%20Music%20Calming%20Music%20Relaxing%20Music%20Soothing%20Music%20Calming%20Music%20%E2%98%AF426B.mp3?alt=media&token=6ffe629d-f6b3-42a6-830a-116cb6224e17" trackName:@"30 Minute Deep Sleep Music"];
     TrackDownload *track3 = [[TrackDownload alloc] initFromURLString:@"https://firebasestorage.googleapis.com/v0/b/bustracking-1524793108793.appspot.com/o/30%20Minute%20Deep%20Sleep%20Music%20Calming%20Music%20Relaxing%20Music%20Soothing%20Music%20Calming%20Music%20%E2%98%AF426B.mp3?alt=media&token=6ffe629d-f6b3-42a6-830a-116cb6224e17" trackName:@"30 Minute Deep Sleep Music"];
+    TrackDownload *track4 = [[TrackDownload alloc] initFromURLString:@"https://firebasestorage.googleapis.com/v0/b/bustracking-1524793108793.appspot.com/o/30%20Minute%20Deep%20Sleep%20Music%20Calming%20Music%20Relaxing%20Music%20Soothing%20Music%20Calming%20Music%20%E2%98%AF426B.mp3?alt=media&token=6ffe629d-f6b3-42a6-830a-116cb6224e17" trackName:@"30 Minute Deep Sleep Music"];
+    TrackDownload *track5 = [[TrackDownload alloc] initFromURLString:@"https://firebasestorage.googleapis.com/v0/b/bustracking-1524793108793.appspot.com/o/30%20Minute%20Deep%20Sleep%20Music%20Calming%20Music%20Relaxing%20Music%20Soothing%20Music%20Calming%20Music%20%E2%98%AF426B.mp3?alt=media&token=6ffe629d-f6b3-42a6-830a-116cb6224e17" trackName:@"30 Minute Deep Sleep Music"];
     
     [self.trackDownloads addObject:track1];
     [self.trackDownloads addObject:track2];
     [self.trackDownloads addObject:track3];
+    [self.trackDownloads addObject:track4];
+    [self.trackDownloads addObject:track5];
     
     [self.downloadTableView reloadData];
 }

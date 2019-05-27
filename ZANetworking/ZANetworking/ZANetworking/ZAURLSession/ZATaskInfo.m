@@ -26,9 +26,10 @@
     if (self = [super init]) {
         _downloadTask = downloadTask;
         _priority = priority;
-        _receivedData = [NSMutableData data];
+        _receivedData = NULL;
         _status = ZASessionTaskStatusInitialized;
         _monitorIdToDownloadMonitorDownloading = [[NSMutableDictionary alloc] init];
+        _completeFileLocation = NULL;
     }
     return self;
 }
