@@ -45,11 +45,18 @@
     TrackDownload *track4 = [[TrackDownload alloc] initFromURLString:@"https://firebasestorage.googleapis.com/v0/b/bustracking-1524793108793.appspot.com/o/30%20Minute%20Deep%20Sleep%20Music%20Calming%20Music%20Relaxing%20Music%20Soothing%20Music%20Calming%20Music%20%E2%98%AF426B.mp3?alt=media&token=6ffe629d-f6b3-42a6-830a-116cb6224e17" trackName:@"30 Minute Deep Sleep Music"];
     TrackDownload *track5 = [[TrackDownload alloc] initFromURLString:@"https://firebasestorage.googleapis.com/v0/b/bustracking-1524793108793.appspot.com/o/30%20Minute%20Deep%20Sleep%20Music%20Calming%20Music%20Relaxing%20Music%20Soothing%20Music%20Calming%20Music%20%E2%98%AF426B.mp3?alt=media&token=6ffe629d-f6b3-42a6-830a-116cb6224e17" trackName:@"30 Minute Deep Sleep Music"];
     
+    TrackDownload *track6 = [[TrackDownload alloc] initFromURLString:@"https://speed.hetzner.de/100MB.bin" trackName:@"Test file 100MB"];
+    TrackDownload *track7 = [[TrackDownload alloc] initFromURLString:@"https://speed.hetzner.de/1GB.bin" trackName:@"Test file 1GB"];
+    TrackDownload *track8 = [[TrackDownload alloc] initFromURLString:@"https://speed.hetzner.de/10GB.bin" trackName:@"Test file 10GB"];
+    
     [self.trackDownloads addObject:track1];
     [self.trackDownloads addObject:track2];
     [self.trackDownloads addObject:track3];
     [self.trackDownloads addObject:track4];
     [self.trackDownloads addObject:track5];
+    [self.trackDownloads addObject:track6];
+    [self.trackDownloads addObject:track7];
+    [self.trackDownloads addObject:track8];
     
     [self.downloadTableView reloadData];
 }
