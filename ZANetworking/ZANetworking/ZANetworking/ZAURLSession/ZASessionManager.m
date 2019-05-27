@@ -75,19 +75,20 @@
         
         if (nil == taskInfo) {
             NSURLSessionDownloadTask *downloadTask = [weakSelf.session downloadTaskWithRequest:request];
-            taskInfo = [[ZATaskInfo alloc] initWithDownloadTask:downloadTask originalRequest:request];
             [downloadTask resume];
-            weakSelf.downloadMonitorIdToTaskInfo[downloadMonitor.identifier] = taskInfo;
-            weakSelf.taskIdToTaskInfo[[NSNumber numberWithInteger:downloadTask.taskIdentifier]] = taskInfo;
-            weakSelf.urlRequestToTaskInfo[request] = taskInfo;
+            taskInfo = [[ZATaskInfo alloc] initWithDownloadTask:downloadTask originalRequest:request];
             [taskInfo changeStatusTo:(ZASessionTaskStatusRunning)];
+            weakSelf.urlRequestToTaskInfo[request] = taskInfo;
+            weakSelf.taskIdToTaskInfo[[NSNumber numberWithInteger:downloadTask.taskIdentifier]] = taskInfo;
         }
         
         weakSelf.downloadMonitorIdToTaskInfo[downloadMonitor.identifier] = taskInfo;
-        taskInfo.monitorIdToDownloadMonitorDownloading[downloadMonitor.identifier] = downloadMonitor;
         
         if (taskInfo.status == ZASessionTaskStatusPaused || taskInfo.status == ZASessionTaskStatusFailed) {
+            taskInfo.monitorIdToDownloadMonitorPause[downloadMonitor.identifier] = downloadMonitor;
             [self resumeDownloadTaskByDownloadMonitorId:downloadMonitor.identifier];
+        } else {
+            taskInfo.monitorIdToDownloadMonitorDownloading[downloadMonitor.identifier] = downloadMonitor;
         }
     });
     
@@ -100,20 +101,21 @@
     
     dispatch_async(self.root_queue, ^{
         ZATaskInfo *taskInfo = [weakSelf.downloadMonitorIdToTaskInfo objectForKey:monitorId];
+        if (nil == taskInfo) { return ; }
         ZADownloadMonitor *pauseDownloadMonitor = taskInfo.monitorIdToDownloadMonitorDownloading[monitorId];
         
-        if (pauseDownloadMonitor) {
-            [taskInfo.monitorIdToDownloadMonitorDownloading removeObjectForKey:monitorId];
-            taskInfo.monitorIdToDownloadMonitorPause[monitorId] = pauseDownloadMonitor;
-            
-            if (taskInfo.monitorIdToDownloadMonitorDownloading.count == 0) {
-                [taskInfo changeStatusTo:(ZASessionTaskStatusPaused)];
-                [taskInfo.downloadTask cancelByProducingResumeData:^(NSData * _Nullable resumeData) {
-                    if (resumeData) {
-                        taskInfo.resumeData = (NSMutableData *)resumeData;
-                    }
-                }];
-            }
+        if (nil == pauseDownloadMonitor) { return; }
+        
+        [taskInfo.monitorIdToDownloadMonitorDownloading removeObjectForKey:monitorId];
+        taskInfo.monitorIdToDownloadMonitorPause[monitorId] = pauseDownloadMonitor;
+        
+        if (taskInfo.monitorIdToDownloadMonitorDownloading.count == 0) {
+            [taskInfo changeStatusTo:(ZASessionTaskStatusPaused)];
+            [taskInfo.downloadTask cancelByProducingResumeData:^(NSData * _Nullable resumeData) {
+                if (resumeData) {
+                    taskInfo.resumeData = (NSMutableData *)resumeData;
+                }
+            }];
         }
     });
 }
@@ -124,37 +126,30 @@
     
     dispatch_async(self.root_queue, ^{
         ZATaskInfo *taskInfo = [weakSelf.downloadMonitorIdToTaskInfo objectForKey:monitorId];
+        if (nil == taskInfo) { return; }
+        
         ZADownloadMonitor *resumeDownloadMonitor = taskInfo.monitorIdToDownloadMonitorPause[monitorId];
-        [taskInfo.monitorIdToDownloadMonitorPause removeObjectForKey:monitorId];
-        [weakSelf.downloadMonitorIdToTaskInfo removeObjectForKey:monitorId];
-        
-        if (nil == resumeDownloadMonitor) {
-            resumeDownloadMonitor = taskInfo.monitorIdToDownloadMonitorDownloading[monitorId];
-        }
-        
         if (nil == resumeDownloadMonitor) { return; }
+        [taskInfo.monitorIdToDownloadMonitorPause removeObjectForKey:monitorId];
         
         if (taskInfo.status == ZASessionTaskStatusRunning) {
             taskInfo.monitorIdToDownloadMonitorDownloading[monitorId] = resumeDownloadMonitor;
-        } else if (taskInfo.status == ZASessionTaskStatusSuccessed) {
+        } else if (taskInfo.status == ZASessionTaskStatusSuccessed && taskInfo.completeFileLocation) {
             resumeDownloadMonitor.completionBlock(taskInfo.downloadTask.response, taskInfo.downloadTask.error);
             NSURL *filePath = resumeDownloadMonitor.destinationBlock(taskInfo.completeFileLocation);
             if (filePath) {
                 [NSFileManager.defaultManager copyItemAtURL:taskInfo.completeFileLocation toURL:filePath error:NULL];
             }
             
-            [weakSelf.taskIdToTaskInfo removeObjectForKey:[NSNumber numberWithInteger:taskInfo.downloadTask.taskIdentifier]];
-            [weakSelf.urlRequestToTaskInfo removeObjectForKey:taskInfo.originalRequest];
             [weakSelf.downloadMonitorIdToTaskInfo removeObjectForKey:monitorId];
             
             if (taskInfo.monitorIdToDownloadMonitorPause.count == 0) {
                 [NSFileManager.defaultManager removeItemAtURL:taskInfo.completeFileLocation error:NULL];
-                [weakSelf.urlRequestToTaskInfo removeObjectForKey:taskInfo.downloadTask.currentRequest];
             }
             
         } else if (taskInfo.status == ZASessionTaskStatusPaused || taskInfo.status == ZASessionTaskStatusFailed) {
             NSURLSessionDownloadTask *resumeTask;
-            NSURLRequest *resumeRequest = taskInfo.downloadTask.currentRequest.copy;
+            NSURLRequest *resumeRequest = taskInfo.originalRequest;
             
             if (taskInfo.resumeData) {
                 resumeTask = [weakSelf.session downloadTaskWithResumeData:taskInfo.resumeData];
@@ -162,13 +157,28 @@
                 resumeTask = [weakSelf.session downloadTaskWithRequest:resumeRequest];
             }
             
+            [resumeTask resume];
+            
             ZATaskInfo *resumeTaskInfo = [[ZATaskInfo alloc] initWithDownloadTask:resumeTask originalRequest:resumeRequest];
+            resumeTaskInfo.resumeData = taskInfo.resumeData;
             resumeTaskInfo.monitorIdToDownloadMonitorDownloading[monitorId] = resumeDownloadMonitor;
+            [resumeTaskInfo changeStatusTo:(ZASessionTaskStatusRunning)];
+            
             weakSelf.urlRequestToTaskInfo[resumeRequest] = resumeTaskInfo;
             weakSelf.downloadMonitorIdToTaskInfo[monitorId] = resumeTaskInfo;
             weakSelf.taskIdToTaskInfo[[NSNumber numberWithInteger:resumeTask.taskIdentifier]] = resumeTaskInfo;
-            [resumeTask resume];
-            [resumeTaskInfo canChangeToStatus:(ZASessionTaskStatusRunning)];
+            
+            for (NSString *pauseId in taskInfo.monitorIdToDownloadMonitorPause.allKeys) {
+                if (pauseId) {
+                    ZADownloadMonitor *pauseMonitor = taskInfo.monitorIdToDownloadMonitorPause[pauseId];
+                    if (pauseMonitor) {
+                        resumeTaskInfo.monitorIdToDownloadMonitorPause[pauseId] = pauseMonitor;
+                        weakSelf.downloadMonitorIdToTaskInfo[pauseId] = resumeTaskInfo;
+                    }
+                }
+            }
+            
+            [taskInfo.monitorIdToDownloadMonitorPause removeAllObjects];
         }
         
         if (taskInfo.monitorIdToDownloadMonitorPause.count == 0
