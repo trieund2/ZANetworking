@@ -16,17 +16,15 @@
 @property (strong, nonatomic, readonly) NSURLSessionDownloadTask *downloadTask;
 @property (strong, nonatomic,) NSMutableData *resumeData;
 @property (assign, nonatomic) ZASessionTaskStatus status;
-@property (assign, nonatomic) ZADownloadPriority priority;
 @property (strong, nonatomic) NSURL *completeFileLocation;
+@property (strong, nonatomic) NSURLRequest *originalRequest;
 @property (strong, nonatomic, readonly) NSMutableDictionary<NSString*, ZADownloadMonitor*> *monitorIdToDownloadMonitorDownloading;
 @property (strong, nonatomic, readonly) NSMutableDictionary<NSString*, ZADownloadMonitor*> *monitorIdToDownloadMonitorPause;
 
 - (instancetype)init NS_UNAVAILABLE;
 
-- (instancetype)initWithDownloadTask:(NSURLSessionDownloadTask *)downloadTask;
-
-- (instancetype)initWithDownloadTask:(NSURLSessionDownloadTask *)downloadMonitor
-                            priority:(ZADownloadPriority)priority NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithDownloadTask:(NSURLSessionDownloadTask *)downloadTask
+                     originalRequest:(NSURLRequest *)originalRequest;
 
 /* Return a BOOL shows that if this task can change to a specific status or not */
 - (BOOL)canChangeToStatus:(ZASessionTaskStatus)status;

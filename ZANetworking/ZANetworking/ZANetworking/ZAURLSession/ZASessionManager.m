@@ -75,7 +75,7 @@
         
         if (nil == taskInfo) {
             NSURLSessionDownloadTask *downloadTask = [weakSelf.session downloadTaskWithRequest:request];
-            taskInfo = [[ZATaskInfo alloc] initWithDownloadTask:downloadTask];
+            taskInfo = [[ZATaskInfo alloc] initWithDownloadTask:downloadTask originalRequest:request];
             [downloadTask resume];
             weakSelf.downloadMonitorIdToTaskInfo[downloadMonitor.identifier] = taskInfo;
             weakSelf.taskIdToTaskInfo[[NSNumber numberWithInteger:downloadTask.taskIdentifier]] = taskInfo;
@@ -143,6 +143,8 @@
                 [NSFileManager.defaultManager copyItemAtURL:taskInfo.completeFileLocation toURL:filePath error:NULL];
             }
             
+            [weakSelf.taskIdToTaskInfo removeObjectForKey:[NSNumber numberWithInteger:taskInfo.downloadTask.taskIdentifier]];
+            [weakSelf.urlRequestToTaskInfo removeObjectForKey:taskInfo.originalRequest];
             [weakSelf.downloadMonitorIdToTaskInfo removeObjectForKey:monitorId];
             
             if (taskInfo.monitorIdToDownloadMonitorPause.count == 0) {
@@ -160,7 +162,7 @@
                 resumeTask = [weakSelf.session downloadTaskWithRequest:resumeRequest];
             }
             
-            ZATaskInfo *resumeTaskInfo = [[ZATaskInfo alloc] initWithDownloadTask:resumeTask];
+            ZATaskInfo *resumeTaskInfo = [[ZATaskInfo alloc] initWithDownloadTask:resumeTask originalRequest:resumeRequest];
             resumeTaskInfo.monitorIdToDownloadMonitorDownloading[monitorId] = resumeDownloadMonitor;
             weakSelf.urlRequestToTaskInfo[resumeRequest] = resumeTaskInfo;
             weakSelf.downloadMonitorIdToTaskInfo[monitorId] = resumeTaskInfo;
@@ -172,7 +174,7 @@
         if (taskInfo.monitorIdToDownloadMonitorPause.count == 0
             && taskInfo.monitorIdToDownloadMonitorDownloading.count == 0) {
             [weakSelf.taskIdToTaskInfo removeObjectForKey:[NSNumber numberWithInteger:taskInfo.downloadTask.taskIdentifier]];
-            [weakSelf.urlRequestToTaskInfo removeObjectForKey:taskInfo.downloadTask.currentRequest];
+            [weakSelf.urlRequestToTaskInfo removeObjectForKey:taskInfo.originalRequest];
             [taskInfo.downloadTask cancel];
         }
     });
@@ -254,7 +256,6 @@ didFinishDownloadingToURL:(NSURL *)location {
             }
         }
         
-        // When finish downloading will remove all downloadMonitorDownloading in TaskInfo
         for (NSString *monitorId in taskInfo.monitorIdToDownloadMonitorDownloading.allKeys) {
             if (monitorId) {
                 [weakSelf.downloadMonitorIdToTaskInfo removeObjectForKey:monitorId];
@@ -264,7 +265,7 @@ didFinishDownloadingToURL:(NSURL *)location {
         
         if (taskInfo.monitorIdToDownloadMonitorPause.count == 0) {
             [NSFileManager.defaultManager removeItemAtURL:location error:NULL];
-            [weakSelf.urlRequestToTaskInfo removeObjectForKey:downloadTask.currentRequest];
+            [weakSelf.urlRequestToTaskInfo removeObjectForKey:taskInfo.originalRequest];
             [weakSelf.taskIdToTaskInfo removeObjectForKey:[NSNumber numberWithInteger:downloadTask.taskIdentifier]];
         } else {
             taskInfo.completeFileLocation = location;

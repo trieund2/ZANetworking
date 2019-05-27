@@ -15,20 +15,15 @@
 
 @implementation ZATaskInfo
 
-- (instancetype)initWithDownloadTask:(NSURLSessionDownloadTask *)downloadTask {
-    return [self initWithDownloadTask:downloadTask priority:ZADownloadPriorityMedium];
-}
-
-- (instancetype)initWithDownloadTask:(NSURLSessionDownloadTask *)downloadTask
-                            priority:(ZADownloadPriority)priority {
+- (instancetype)initWithDownloadTask:(NSURLSessionDownloadTask *)downloadTask originalRequest:(NSURLRequest *)originalRequest {
     if (self = [super init]) {
         _downloadTask = downloadTask;
-        _priority = priority;
         _resumeData = NULL;
         _status = ZASessionTaskStatusInitialized;
         _monitorIdToDownloadMonitorDownloading = [[NSMutableDictionary alloc] init];
         _monitorIdToDownloadMonitorPause = [[NSMutableDictionary alloc] init];
         _completeFileLocation = NULL;
+        _originalRequest = originalRequest;
     }
     return self;
 }
