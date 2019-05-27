@@ -62,6 +62,8 @@
             break;
          
         case ZASessionTaskStatusCancelled:
+            self.progressView.progress = 0;
+            self.percentDownloadLabel.text = @"0%";
             self.downloadStatusLabel.text = @"Cancel";
             [self.startDownloadButton setEnabled:YES];
             [self.pauseButton setEnabled:NO];
@@ -69,6 +71,8 @@
             break;
             
         case ZASessionTaskStatusSuccessed:
+            self.progressView.progress = 1;
+            self.percentDownloadLabel.text = @"100%";
             self.downloadStatusLabel.text = @"Complete";
             [self.startDownloadButton setEnabled:YES];
             [self.pauseButton setEnabled:NO];
