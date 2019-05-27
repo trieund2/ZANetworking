@@ -14,7 +14,7 @@
 @interface ZATaskInfo : NSObject
 
 @property (strong, nonatomic, readonly) NSURLSessionDownloadTask *downloadTask;
-@property (strong, nonatomic,) NSMutableData *receivedData;
+@property (strong, nonatomic,) NSMutableData *resumeData;
 @property (assign, nonatomic) ZASessionTaskStatus status;
 @property (assign, nonatomic) ZADownloadPriority priority;
 @property (strong, nonatomic) NSURL *completeFileLocation;
@@ -23,11 +23,9 @@
 
 - (instancetype)init NS_UNAVAILABLE;
 
-- (instancetype)initWithDownloadTask:(NSURLSessionDownloadTask *)downloadTask
-                         taskRequest:(ZADownloadMonitor *)taskRequest;
+- (instancetype)initWithDownloadTask:(NSURLSessionDownloadTask *)downloadTask;
 
-- (instancetype)initWithDownloadTask:(NSURLSessionDownloadTask *)downloadTask
-                         taskRequest:(ZADownloadMonitor *)taskRequest
+- (instancetype)initWithDownloadTask:(NSURLSessionDownloadTask *)downloadMonitor
                             priority:(ZADownloadPriority)priority NS_DESIGNATED_INITIALIZER;
 
 /* Return a BOOL shows that if this task can change to a specific status or not */

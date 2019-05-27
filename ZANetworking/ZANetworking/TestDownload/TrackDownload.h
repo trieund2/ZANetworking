@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) NSString *name;
 @property (nonatomic) NSProgress *progress;
 @property (nonatomic) ZASessionTaskStatus status;
-@property (nonatomic) NSURLRequest *request;
+@property (nonatomic) NSString *identifier;
 
 - (id)initFromURLString:(NSString *)urlString;
 

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -85,13 +85,13 @@
             <connections>
                 <outlet property="cancelButton" destination="8ef-UB-dTa" id="Vmh-iT-QQK"/>
                 <outlet property="downloadStatusLabel" destination="B3X-Tw-ndm" id="lZS-i8-484"/>
-                <outlet property="pauseButton" destination="8ef-UB-dTa" id="a5K-Em-cE1"/>
+                <outlet property="pauseButton" destination="xkA-uG-hUq" id="x4m-rl-5ar"/>
                 <outlet property="percentDownloadLabel" destination="WKV-Zu-bQy" id="2jw-D3-qhA"/>
                 <outlet property="progressView" destination="utZ-op-K5F" id="Gaq-4i-6yH"/>
                 <outlet property="startDownloadButton" destination="al6-X8-8vA" id="KCE-UI-cXz"/>
                 <outlet property="trackNameLabel" destination="24t-4V-ghb" id="VlW-VH-7uu"/>
             </connections>
-            <point key="canvasLocation" x="-790" y="-49"/>
+            <point key="canvasLocation" x="-358" y="-43"/>
         </tableViewCell>
     </objects>
 </document>

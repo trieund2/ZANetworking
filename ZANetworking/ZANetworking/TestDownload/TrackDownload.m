@@ -15,7 +15,7 @@
         _urlString = urlString;
         _progress = [[NSProgress alloc] init];
         _status = ZASessionTaskStatusInitialized;
-        _request = nil;
+        _identifier = nil;
     }
    
     return self;

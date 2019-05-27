@@ -11,7 +11,7 @@
 @interface DownloadTableViewCell ()
 
 @property (nonatomic) NSIndexPath *currentIndexPath;
-
+@property (nonatomic) TrackDownload *trackDownload;
 @end
 
 #pragma mark - Init
@@ -26,6 +26,7 @@
 #pragma mark: - Interface methods
 
 - (void)configCellByTrackDownload:(TrackDownload *)trackDownload indexPath:(NSIndexPath *)indexPath {
+    self.trackDownload = trackDownload;
     self.currentIndexPath = indexPath;
     self.trackNameLabel.text = trackDownload.name;
     
@@ -34,6 +35,8 @@
         [self.progressView setProgress:progress];
         self.percentDownloadLabel.text = [NSString stringWithFormat:@"%0.1f%%", progress * 100];
     }
+    
+    [self.pauseButton setTitle:@"Pause" forState:(UIControlStateNormal)];
     
     switch (trackDownload.status) {
         case ZASessionTaskStatusInitialized:
@@ -72,7 +75,12 @@
             [self.cancelButton setEnabled:NO];
             break;
             
-        default:
+        case ZASessionTaskStatusFailed:
+            self.downloadStatusLabel.text = @"Fail";
+            [self.startDownloadButton setEnabled:NO];
+            [self.pauseButton setEnabled:YES];
+            [self.pauseButton setTitle:@"Try again" forState:(UIControlStateNormal)];
+            [self.cancelButton setEnabled:YES];
             break;
     }
 }
@@ -87,7 +95,12 @@
 
 - (IBAction)tapOnPause:(id)sender {
     if ([self.delegate conformsToProtocol:@protocol(DownloadTableViewCellDelegate)]) {
-        [self.delegate didSelectPauseAtIndexPath:self.currentIndexPath];
+        if (self.trackDownload.status == ZASessionTaskStatusPaused) {
+            [self.delegate didSelectResumeAtIndexPath:self.currentIndexPath];
+        } else {
+            [self.delegate didSelectPauseAtIndexPath:self.currentIndexPath];
+        }
+        
     }
 }
 
