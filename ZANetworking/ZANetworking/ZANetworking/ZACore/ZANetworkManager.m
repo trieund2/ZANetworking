@@ -8,11 +8,14 @@
 
 #import "ZANetworkManager.h"
 
-NSString * const kNetworkStatusDidChangeNotification = @"kNetworkStatusDidChangeNotification";
+NSString * const NetworkStatusDidChangeNotification = @"NetworkStatusDidChangeNotification";
+NSString * const NetworkStatusPreviousValue = @"NetworkStatusPreviousValue";
+NSString * const NetworkStatusCurrentValue = @"NetworkStatusCurrentValue";
 
 @interface ZANetworkManager ()
 
 @property (strong, nonatomic) Reachability *reach;
+@property (assign, nonatomic) NetworkStatus tempNetworkStatus;
 
 @end
 
@@ -31,6 +34,7 @@ NSString * const kNetworkStatusDidChangeNotification = @"kNetworkStatusDidChange
     if (self = [super init]) {
         self.reach = Reachability.reachabilityForInternetConnection;
         [self.reach startNotifier];
+        self.tempNetworkStatus = self.currentNetworkStatus;
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(networkStatusChangedHandler:)
                                                    name:kReachabilityChangedNotification
@@ -40,7 +44,10 @@ NSString * const kNetworkStatusDidChangeNotification = @"kNetworkStatusDidChange
 }
 
 - (void)networkStatusChangedHandler:(NSNotification *)notification {
-    [NSNotificationCenter.defaultCenter postNotificationName:kNetworkStatusDidChangeNotification object:nil];
+    NSDictionary *object = @{NetworkStatusPreviousValue : @(self.tempNetworkStatus),
+                             NetworkStatusCurrentValue : @(self.currentNetworkStatus)};
+    [NSNotificationCenter.defaultCenter postNotificationName:NetworkStatusDidChangeNotification object:object];
+    self.tempNetworkStatus = self.currentNetworkStatus;
 }
 
 - (NetworkStatus)currentNetworkStatus {

@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ZADownloadPriority.h"
 
 typedef void (^ZAURLSessionTaskProgressBlock)(NSProgress *progress, NSString *callBackIdentifier);
 typedef NSURL * (^ZAURLSessionDownloadTaskDestinationBlock)(NSURL *location, NSString *callBackIdentifier);
@@ -15,12 +16,18 @@ typedef void (^ZAURLSessionTaskCompletionBlock)(NSURLResponse *response, NSError
 @interface ZADownloadCallback : NSObject
 
 @property (copy, nonatomic, readonly) NSString *identifier;
+@property (assign, nonatomic) ZADownloadPriority priority;
 @property (copy, nonatomic, readonly) ZAURLSessionTaskProgressBlock progressBlock;
 @property (copy, nonatomic, readonly) ZAURLSessionDownloadTaskDestinationBlock destinationBlock;
 @property (copy, nonatomic, readonly) ZAURLSessionTaskCompletionBlock completionBlock;
 
 - (instancetype)initWithProgressBlock:(ZAURLSessionTaskProgressBlock)progressBlock
                      destinationBlock:(ZAURLSessionDownloadTaskDestinationBlock)destinationBlock
-                      completionBlock:(ZAURLSessionTaskCompletionBlock)completionBlock NS_DESIGNATED_INITIALIZER;
+                      completionBlock:(ZAURLSessionTaskCompletionBlock)completionBlock;
+
+- (instancetype)initWithProgressBlock:(ZAURLSessionTaskProgressBlock)progressBlock
+                     destinationBlock:(ZAURLSessionDownloadTaskDestinationBlock)destinationBlock
+                      completionBlock:(ZAURLSessionTaskCompletionBlock)completionBlock
+                             priority:(ZADownloadPriority)priority NS_DESIGNATED_INITIALIZER;
 
 @end
