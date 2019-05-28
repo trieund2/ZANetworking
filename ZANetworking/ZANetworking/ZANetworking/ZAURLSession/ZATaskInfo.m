@@ -62,11 +62,15 @@
     _status = status;
 }
 
-- (void)updateCallbackPriority:(ZADownloadPriority)priority byIdentifier:(NSString *)identifier {
-    if (self.callBackIdToCallBackDownloading[identifier]) {
-        self.callBackIdToCallBackDownloading[identifier].priority = priority;
-    } else if (self.callBackIdToCallBackPause[identifier]) {
-        self.callBackIdToCallBackPause[identifier].priority = priority;
+- (void)updateDownloadTaskPriorityByPriorityWasRemoved:(ZADownloadPriority)removedPriority {
+    if (self.downloadTask.priority == removedPriority) {
+        ZADownloadPriority newPriority = ZADownloadPriorityLow;
+        for (ZADownloadCallback *callback in self.callBackIdToCallBackDownloading.allValues) {
+            if (callback.priority > newPriority) {
+                newPriority = callback.priority;
+            }
+        }
+        self.downloadTask.priority = newPriority;
     }
 }
 

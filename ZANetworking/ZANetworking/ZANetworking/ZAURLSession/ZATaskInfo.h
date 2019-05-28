@@ -40,6 +40,6 @@
  */
 - (void)changeStatusTo:(ZASessionTaskStatus)status;
 
-- (void)updateCallbackPriority:(ZADownloadPriority)priority byIdentifier:(NSString *)identifier;
+- (void)updateDownloadTaskPriorityByPriorityWasRemoved:(ZADownloadPriority)removedPriority;
 
 @end

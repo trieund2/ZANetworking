@@ -72,11 +72,16 @@
         
         if (nil == taskInfo) {
             NSURLSessionDownloadTask *downloadTask = [weakSelf.session downloadTaskWithRequest:request];
+            downloadTask.priority = priority;
             [downloadTask resume];
             taskInfo = [[ZATaskInfo alloc] initWithDownloadTask:downloadTask originalRequest:request];
             [taskInfo changeStatusTo:(ZASessionTaskStatusRunning)];
             weakSelf.urlRequestToTaskInfo[request] = taskInfo;
             weakSelf.taskIdToTaskInfo[[NSNumber numberWithInteger:downloadTask.taskIdentifier]] = taskInfo;
+        } else {
+            if (taskInfo.downloadTask.priority < priority) {
+                taskInfo.downloadTask.priority = priority;
+            }
         }
         
         weakSelf.callbackIdToTaskInfo[callBack.identifier] = taskInfo;
@@ -112,6 +117,8 @@
                     taskInfo.resumeData = (NSMutableData *)resumeData;
                 }
             }];
+        } else {
+            [taskInfo updateDownloadTaskPriorityByPriorityWasRemoved:pauseCallBack.priority];
         }
     });
 }
@@ -130,6 +137,9 @@
         
         if (taskInfo.status == ZASessionTaskStatusRunning) {
             taskInfo.callBackIdToCallBackDownloading[identifier] = resumeCallBack;
+            if (resumeCallBack.priority > taskInfo.downloadTask.priority) {
+                taskInfo.downloadTask.priority = resumeCallBack.priority;
+            }
         } else if (taskInfo.status == ZASessionTaskStatusSuccessed && taskInfo.completeFileLocation) {
             resumeCallBack.completionBlock(taskInfo.downloadTask.response, taskInfo.downloadTask.error, resumeCallBack.identifier);
             NSURL *filePath = resumeCallBack.destinationBlock(taskInfo.completeFileLocation, resumeCallBack.identifier);
@@ -154,6 +164,7 @@
                 resumeTask = [weakSelf.session downloadTaskWithRequest:resumeRequest];
             }
             
+            resumeTask.priority = resumeCallBack.priority;
             [resumeTask resume];
             
             ZATaskInfo *resumeTaskInfo = [[ZATaskInfo alloc] initWithDownloadTask:resumeTask originalRequest:resumeRequest];
@@ -195,10 +206,12 @@
         if (nil == taskInfo) { return; }
         ZADownloadCallback *cancelCallBack = taskInfo.callBackIdToCallBackPause[identifier];
         [weakSelf.callbackIdToTaskInfo removeObjectForKey:identifier];
+        BOOL isCancelDownloadingTask = NO;
         
         if (cancelCallBack) {
             [taskInfo.callBackIdToCallBackPause removeObjectForKey:identifier];
         } else {
+            isCancelDownloadingTask = YES;
             cancelCallBack = taskInfo.callBackIdToCallBackDownloading[identifier];
             [taskInfo.callBackIdToCallBackDownloading removeObjectForKey:identifier];
         }
@@ -210,21 +223,12 @@
             [weakSelf.taskIdToTaskInfo removeObjectForKey:[NSNumber numberWithInteger:taskInfo.downloadTask.taskIdentifier]];
             [weakSelf.urlRequestToTaskInfo removeObjectForKey:taskInfo.originalRequest];
             [taskInfo.downloadTask cancel];
+        } else if (isCancelDownloadingTask && taskInfo.callBackIdToCallBackDownloading.count > 0) {
+            [taskInfo updateDownloadTaskPriorityByPriorityWasRemoved:cancelCallBack.priority];
         }
     });
 }
 
-- (void)updateDownloadTaskPriority:(ZADownloadPriority)priority byIdentifier:(NSString *)identifier {
-    if (nil == identifier) { return; }
-    __weak typeof(self) weakSelf = self;
-    
-    dispatch_async(self.root_queue, ^{
-        ZATaskInfo *taskInfo = [weakSelf.callbackIdToTaskInfo objectForKey:identifier];
-        if (taskInfo) {
-            [taskInfo updateCallbackPriority:priority byIdentifier:identifier];
-        }
-    });
-}
 
 #pragma mark - Build URLRequest Helper
 
