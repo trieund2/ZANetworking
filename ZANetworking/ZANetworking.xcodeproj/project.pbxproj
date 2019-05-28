@@ -18,6 +18,7 @@
 		C51C99D6229A8C71007A04FA /* DownloadTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C51C99D4229A8C71007A04FA /* DownloadTableViewCell.m */; };
 		C51C99D7229A8C71007A04FA /* DownloadTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C51C99D5229A8C71007A04FA /* DownloadTableViewCell.xib */; };
 		C51C99DA229A916F007A04FA /* TrackDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = C51C99D9229A916F007A04FA /* TrackDownload.m */; };
+		D70649E3229BF2F300BBFE7B /* ZADownloadPriority.m in Sources */ = {isa = PBXBuildFile; fileRef = D70649E2229BF2F300BBFE7B /* ZADownloadPriority.m */; };
 		D76F76BB229795300069AD99 /* ZADownloadCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = D76F76BA229795300069AD99 /* ZADownloadCallback.m */; };
 		D76F76BF2297E02B0069AD99 /* ZANetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D76F76BE2297E02B0069AD99 /* ZANetworkManager.m */; };
 		D76F76C42297E1CA0069AD99 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = D76F76C32297E1CA0069AD99 /* Reachability.m */; };
@@ -60,6 +61,7 @@
 		C545BF092299830600304106 /* ZASessionTaskStatus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZASessionTaskStatus.h; sourceTree = "<group>"; };
 		C545BF0D22999C4300304106 /* ZATaskInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZATaskInfo.h; sourceTree = "<group>"; };
 		C545BF0E22999C8100304106 /* ZASessionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZASessionManager.h; sourceTree = "<group>"; };
+		D70649E2229BF2F300BBFE7B /* ZADownloadPriority.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZADownloadPriority.m; sourceTree = "<group>"; };
 		D76F76B9229795300069AD99 /* ZADownloadCallback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZADownloadCallback.h; sourceTree = "<group>"; };
 		D76F76BA229795300069AD99 /* ZADownloadCallback.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZADownloadCallback.m; sourceTree = "<group>"; };
 		D76F76BD2297E02B0069AD99 /* ZANetworkManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZANetworkManager.h; sourceTree = "<group>"; };
@@ -175,6 +177,7 @@
 			isa = PBXGroup;
 			children = (
 				A1346B832296A7C3009E73B7 /* ZADownloadPriority.h */,
+				D70649E2229BF2F300BBFE7B /* ZADownloadPriority.m */,
 				C545BF092299830600304106 /* ZASessionTaskStatus.h */,
 				D76F76BD2297E02B0069AD99 /* ZANetworkManager.h */,
 				D76F76BE2297E02B0069AD99 /* ZANetworkManager.m */,
@@ -328,6 +331,7 @@
 				A1346B592296A1E5009E73B7 /* ViewController.m in Sources */,
 				A1346B7E2296A5A7009E73B7 /* ZASessionManager.m in Sources */,
 				C51C99DA229A916F007A04FA /* TrackDownload.m in Sources */,
+				D70649E3229BF2F300BBFE7B /* ZADownloadPriority.m in Sources */,
 				A1346B642296A1E6009E73B7 /* main.m in Sources */,
 				D76F76BB229795300069AD99 /* ZADownloadCallback.m in Sources */,
 				D76F76BF2297E02B0069AD99 /* ZANetworkManager.m in Sources */,

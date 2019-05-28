@@ -24,8 +24,19 @@ pthread_mutex_t url_session_task_request_mutex = PTHREAD_MUTEX_INITIALIZER;
 - (instancetype)initWithProgressBlock:(ZAURLSessionTaskProgressBlock)progressBlock
                      destinationBlock:(ZAURLSessionDownloadTaskDestinationBlock)destinationBlock
                       completionBlock:(ZAURLSessionTaskCompletionBlock)completionBlock {
+    return [self initWithProgressBlock:progressBlock
+                      destinationBlock:destinationBlock
+                       completionBlock:completionBlock
+                              priority:ZADownloadPriorityMedium];
+}
+
+- (instancetype)initWithProgressBlock:(ZAURLSessionTaskProgressBlock)progressBlock
+                     destinationBlock:(ZAURLSessionDownloadTaskDestinationBlock)destinationBlock
+                      completionBlock:(ZAURLSessionTaskCompletionBlock)completionBlock
+                             priority:(ZADownloadPriority)priority {
     if (self = [super init]) {
         _identifier = NSUUID.UUID.UUIDString;
+        _priority = priority;
         _progressBlock = progressBlock;
         _destinationBlock = destinationBlock;
         _completionBlock = completionBlock;

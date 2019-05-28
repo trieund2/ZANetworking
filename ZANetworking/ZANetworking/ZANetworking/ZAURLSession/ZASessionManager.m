@@ -214,6 +214,18 @@
     });
 }
 
+- (void)updateDownloadTaskPriority:(ZADownloadPriority)priority byIdentifier:(NSString *)identifier {
+    if (nil == identifier) { return; }
+    __weak typeof(self) weakSelf = self;
+    
+    dispatch_async(self.root_queue, ^{
+        ZATaskInfo *taskInfo = [weakSelf.callbackIdToTaskInfo objectForKey:identifier];
+        if (taskInfo) {
+            [taskInfo updateCallbackPriority:priority byIdentifier:identifier];
+        }
+    });
+}
+
 #pragma mark - Build URLRequest Helper
 
 - (nullable NSURLRequest *)buildURLRequestFromURLString:(nonnull NSString *)urlString

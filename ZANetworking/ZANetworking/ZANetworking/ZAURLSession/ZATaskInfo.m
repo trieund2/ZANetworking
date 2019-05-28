@@ -16,8 +16,15 @@
 @implementation ZATaskInfo
 
 - (instancetype)initWithDownloadTask:(NSURLSessionDownloadTask *)downloadTask originalRequest:(NSURLRequest *)originalRequest {
+    return [self initWithDownloadTask:downloadTask originalRequest:originalRequest priority:ZADownloadPriorityMedium];
+}
+
+- (instancetype)initWithDownloadTask:(NSURLSessionDownloadTask *)downloadTask
+                     originalRequest:(NSURLRequest *)originalRequest
+                            priority:(ZADownloadPriority)priority {
     if (self = [super init]) {
         _downloadTask = downloadTask;
+        _downloadTask.priority = priority;
         _resumeData = NULL;
         _status = ZASessionTaskStatusInitialized;
         _callBackIdToCallBackDownloading = [[NSMutableDictionary alloc] init];
@@ -53,6 +60,14 @@
 #endif
     if (![self canChangeToStatus:status]) { return; }
     _status = status;
+}
+
+- (void)updateCallbackPriority:(ZADownloadPriority)priority byIdentifier:(NSString *)identifier {
+    if (self.callBackIdToCallBackDownloading[identifier]) {
+        self.callBackIdToCallBackDownloading[identifier].priority = priority;
+    } else if (self.callBackIdToCallBackPause[identifier]) {
+        self.callBackIdToCallBackPause[identifier].priority = priority;
+    }
 }
 
 @end
