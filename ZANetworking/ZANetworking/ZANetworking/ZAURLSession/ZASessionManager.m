@@ -258,10 +258,10 @@
     NetworkStatus status = ZANetworkManager.sharedInstance.currentNetworkStatus;
     switch (status) {
         case ReachableViaWiFi:
-            return 15;
+            return 60;
             
         case ReachableViaWWAN:
-            return 30;
+            return 90;
             
         case NotReachable:
             return 0;
