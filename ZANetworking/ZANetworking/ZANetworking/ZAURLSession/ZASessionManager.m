@@ -61,16 +61,16 @@
                           progressBlock:(ZAURLSessionTaskProgressBlock)progressBlock
                        destinationBlock:(ZAURLSessionDownloadTaskDestinationBlock)destinationBlock
                         completionBlock:(ZAURLSessionTaskCompletionBlock)completionBlock {
-    __block ZADownloadCallback *callBack;
+    
+    __block ZADownloadCallback *callBack = [[ZADownloadCallback alloc] initWithProgressBlock:progressBlock
+                                                                            destinationBlock:destinationBlock
+                                                                             completionBlock:completionBlock];
     __weak typeof(self) weakSelf = self;
     
-    dispatch_sync(self.root_queue, ^{
+    dispatch_async(self.root_queue, ^{
         NSURLRequest *request = [weakSelf buildURLRequestFromURLString:urlString headers:header];
         if (nil == request) { return; }
         
-        callBack = [[ZADownloadCallback alloc] initWithProgressBlock:progressBlock
-                                                          destinationBlock:destinationBlock
-                                                           completionBlock:completionBlock];
         ZATaskInfo* taskInfo = [weakSelf.urlRequestToTaskInfo objectForKey:request];
         
         if (nil == taskInfo) {
@@ -134,8 +134,8 @@
         if (taskInfo.status == ZASessionTaskStatusRunning) {
             taskInfo.callBackIdToCallBackDownloading[identifier] = resumeCallBack;
         } else if (taskInfo.status == ZASessionTaskStatusSuccessed && taskInfo.completeFileLocation) {
-            resumeCallBack.completionBlock(taskInfo.downloadTask.response, taskInfo.downloadTask.error);
-            NSURL *filePath = resumeCallBack.destinationBlock(taskInfo.completeFileLocation);
+            resumeCallBack.completionBlock(taskInfo.downloadTask.response, taskInfo.downloadTask.error, resumeCallBack.identifier);
+            NSURL *filePath = resumeCallBack.destinationBlock(taskInfo.completeFileLocation, resumeCallBack.identifier);
             if (filePath) {
                 [NSFileManager.defaultManager copyItemAtURL:taskInfo.completeFileLocation toURL:filePath error:NULL];
             }
@@ -255,8 +255,8 @@ didFinishDownloadingToURL:(NSURL *)location {
     dispatch_async(self.root_queue, ^{
         ZATaskInfo *taskInfo = [weakSelf.taskIdToTaskInfo objectForKey:[NSNumber numberWithInteger:downloadTask.taskIdentifier]];
         for (ZADownloadCallback *callBack in taskInfo.callBackIdToCallBackDownloading.allValues) {
-            callBack.completionBlock(downloadTask.response, downloadTask.error);
-            NSURL *filePath = callBack.destinationBlock(location);
+            callBack.completionBlock(downloadTask.response, downloadTask.error, callBack.identifier);
+            NSURL *filePath = callBack.destinationBlock(location, callBack.identifier);
             if (filePath) {
                 [NSFileManager.defaultManager copyItemAtURL:location
                                                       toURL:filePath
@@ -295,7 +295,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
         progress.completedUnitCount = totalBytesWritten;
         ZATaskInfo *taskInfo = [weakSelf.taskIdToTaskInfo objectForKey:[NSNumber numberWithInteger:downloadTask.taskIdentifier]];
         for (ZADownloadCallback *callBackDownloading in taskInfo.callBackIdToCallBackDownloading.allValues) {
-            callBackDownloading.progressBlock(progress);
+            callBackDownloading.progressBlock(progress, callBackDownloading.identifier);
         }
     });
 }
@@ -312,7 +312,7 @@ expectedTotalBytes:(int64_t)expectedTotalBytes {
         progress.completedUnitCount = fileOffset;
         ZATaskInfo *taskInfo = [weakSelf.taskIdToTaskInfo objectForKey:[NSNumber numberWithInteger:downloadTask.taskIdentifier]];
         for (ZADownloadCallback *callBackDownloading in taskInfo.callBackIdToCallBackDownloading.allValues) {
-            callBackDownloading.progressBlock(progress);
+            callBackDownloading.progressBlock(progress, callBackDownloading.identifier);
         }
     });
 }
@@ -328,7 +328,7 @@ expectedTotalBytes:(int64_t)expectedTotalBytes {
             for (NSString *callBackId in taskInfo.callBackIdToCallBackDownloading.allKeys) {
                 ZADownloadCallback *callBackDownloading = [taskInfo.callBackIdToCallBackDownloading objectForKey:callBackId];
                 if (callBackDownloading) {
-                    callBackDownloading.completionBlock(task.response, error);
+                    callBackDownloading.completionBlock(task.response, error, callBackDownloading.identifier);
                     taskInfo.callBackIdToCallBackPause[callBackId] = callBackDownloading;
                 }
             }

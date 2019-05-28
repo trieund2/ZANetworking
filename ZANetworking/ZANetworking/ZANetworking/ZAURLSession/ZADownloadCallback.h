@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void (^ZAURLSessionTaskProgressBlock)(NSProgress *);
-typedef NSURL * (^ZAURLSessionDownloadTaskDestinationBlock)(NSURL *location);
-typedef void (^ZAURLSessionTaskCompletionBlock)(NSURLResponse *response, NSError *error);
+typedef void (^ZAURLSessionTaskProgressBlock)(NSProgress *progress, NSString *callBackIdentifier);
+typedef NSURL * (^ZAURLSessionDownloadTaskDestinationBlock)(NSURL *location, NSString *callBackIdentifier);
+typedef void (^ZAURLSessionTaskCompletionBlock)(NSURLResponse *response, NSError *error, NSString *callBackIdentifier);
 
 @interface ZADownloadCallback : NSObject
 
