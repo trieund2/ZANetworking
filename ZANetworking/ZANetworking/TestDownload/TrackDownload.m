@@ -16,6 +16,7 @@
         _progress = [[NSProgress alloc] init];
         _status = ZASessionTaskStatusInitialized;
         _identifier = nil;
+        _priority = ZADownloadPriorityHigh;
     }
    
     return self;
@@ -29,22 +30,12 @@
     return self;
 }
 
-- (BOOL)canChangeToStatus:(ZASessionTaskStatus)status {
-    switch (_status) {
-        case ZASessionTaskStatusInitialized:
-            return YES;
-            
-        case ZASessionTaskStatusRunning:
-            return (status == ZASessionTaskStatusPaused) || (status == ZASessionTaskStatusSuccessed) || (status == ZASessionTaskStatusCancelled);
-            
-        case ZASessionTaskStatusPaused:
-            return (status == ZASessionTaskStatusRunning) || (status == ZASessionTaskStatusSuccessed) || (status == ZASessionTaskStatusCancelled);
-            
-        case ZASessionTaskStatusSuccessed:
-        case ZASessionTaskStatusCancelled:
-        case ZASessionTaskStatusFailed:
-            return NO;
+- (id)initFromURLString:(NSString *)urlString trackName:(NSString *)name priority:(ZADownloadPriority)priority {
+    if (self = [self initFromURLString:urlString trackName:name]) {
+        _priority = priority;
     }
+    
+    return self;
 }
 
 @end

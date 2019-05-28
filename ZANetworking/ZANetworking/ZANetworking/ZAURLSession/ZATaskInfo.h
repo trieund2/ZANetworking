@@ -26,6 +26,10 @@
 - (instancetype)initWithDownloadTask:(NSURLSessionDownloadTask *)downloadTask
                      originalRequest:(NSURLRequest *)originalRequest;
 
+- (instancetype)initWithDownloadTask:(NSURLSessionDownloadTask *)downloadTask
+                     originalRequest:(NSURLRequest *)originalRequest
+                            priority:(ZADownloadPriority)priority NS_DESIGNATED_INITIALIZER;
+
 /* Return a BOOL shows that if this task can change to a specific status or not */
 - (BOOL)canChangeToStatus:(ZASessionTaskStatus)status;
 
@@ -35,5 +39,7 @@
  * @warning If you try to change task's status to a forbidden one, it will throw an error in debug mode.
  */
 - (void)changeStatusTo:(ZASessionTaskStatus)status;
+
+- (void)updateDownloadTaskPriorityByPriorityWasRemoved:(ZADownloadPriority)removedPriority;
 
 @end

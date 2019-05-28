@@ -9,7 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "Reachability.h"
 
-FOUNDATION_EXPORT NSString * const kNetworkStatusDidChangeNotification;
+FOUNDATION_EXPORT NSString * const NetworkStatusDidChangeNotification;
+FOUNDATION_EXPORT NSString * const NetworkStatusPreviousValue;
+FOUNDATION_EXPORT NSString * const NetworkStatusCurrentValue;
 
 @interface ZANetworkManager : NSObject
 
