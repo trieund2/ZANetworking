@@ -18,7 +18,7 @@
 		C51C99D6229A8C71007A04FA /* DownloadTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C51C99D4229A8C71007A04FA /* DownloadTableViewCell.m */; };
 		C51C99D7229A8C71007A04FA /* DownloadTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C51C99D5229A8C71007A04FA /* DownloadTableViewCell.xib */; };
 		C51C99DA229A916F007A04FA /* TrackDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = C51C99D9229A916F007A04FA /* TrackDownload.m */; };
-		D76F76BB229795300069AD99 /* ZADownloadMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = D76F76BA229795300069AD99 /* ZADownloadMonitor.m */; };
+		D76F76BB229795300069AD99 /* ZADownloadCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = D76F76BA229795300069AD99 /* ZADownloadCallback.m */; };
 		D76F76BF2297E02B0069AD99 /* ZANetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D76F76BE2297E02B0069AD99 /* ZANetworkManager.m */; };
 		D76F76C42297E1CA0069AD99 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = D76F76C32297E1CA0069AD99 /* Reachability.m */; };
 		D76F76C72297E4B30069AD99 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D76F76C62297E4B30069AD99 /* SystemConfiguration.framework */; };
@@ -60,8 +60,8 @@
 		C545BF092299830600304106 /* ZASessionTaskStatus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZASessionTaskStatus.h; sourceTree = "<group>"; };
 		C545BF0D22999C4300304106 /* ZATaskInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZATaskInfo.h; sourceTree = "<group>"; };
 		C545BF0E22999C8100304106 /* ZASessionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZASessionManager.h; sourceTree = "<group>"; };
-		D76F76B9229795300069AD99 /* ZADownloadMonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZADownloadMonitor.h; sourceTree = "<group>"; };
-		D76F76BA229795300069AD99 /* ZADownloadMonitor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZADownloadMonitor.m; sourceTree = "<group>"; };
+		D76F76B9229795300069AD99 /* ZADownloadCallback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZADownloadCallback.h; sourceTree = "<group>"; };
+		D76F76BA229795300069AD99 /* ZADownloadCallback.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZADownloadCallback.m; sourceTree = "<group>"; };
 		D76F76BD2297E02B0069AD99 /* ZANetworkManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZANetworkManager.h; sourceTree = "<group>"; };
 		D76F76BE2297E02B0069AD99 /* ZANetworkManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZANetworkManager.m; sourceTree = "<group>"; };
 		D76F76C22297E1CA0069AD99 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
@@ -165,8 +165,8 @@
 				A1346B7D2296A5A7009E73B7 /* ZASessionManager.m */,
 				C545BF0D22999C4300304106 /* ZATaskInfo.h */,
 				D7E14A822296A9D900540DA8 /* ZATaskInfo.m */,
-				D76F76B9229795300069AD99 /* ZADownloadMonitor.h */,
-				D76F76BA229795300069AD99 /* ZADownloadMonitor.m */,
+				D76F76B9229795300069AD99 /* ZADownloadCallback.h */,
+				D76F76BA229795300069AD99 /* ZADownloadCallback.m */,
 			);
 			path = ZAURLSession;
 			sourceTree = "<group>";
@@ -329,9 +329,9 @@
 				A1346B7E2296A5A7009E73B7 /* ZASessionManager.m in Sources */,
 				C51C99DA229A916F007A04FA /* TrackDownload.m in Sources */,
 				A1346B642296A1E6009E73B7 /* main.m in Sources */,
-				D76F76BB229795300069AD99 /* ZADownloadMonitor.m in Sources */,
+				D76F76BB229795300069AD99 /* ZADownloadCallback.m in Sources */,
 				D76F76BF2297E02B0069AD99 /* ZANetworkManager.m in Sources */,
-				D76F76BB229795300069AD99 /* ZADownloadMonitor.m in Sources */,
+				D76F76BB229795300069AD99 /* ZADownloadCallback.m in Sources */,
 				C51C99D6229A8C71007A04FA /* DownloadTableViewCell.m in Sources */,
 				D76F76C42297E1CA0069AD99 /* Reachability.m in Sources */,
 				A1346B562296A1E5009E73B7 /* AppDelegate.m in Sources */,

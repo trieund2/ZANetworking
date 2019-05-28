@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ZADownloadMonitor.h"
+#import "ZADownloadCallback.h"
 #import "ZASessionTaskStatus.h"
 #import "ZADownloadPriority.h"
 
@@ -18,8 +18,8 @@
 @property (assign, nonatomic) ZASessionTaskStatus status;
 @property (strong, nonatomic) NSURL *completeFileLocation;
 @property (strong, nonatomic) NSURLRequest *originalRequest;
-@property (strong, nonatomic, readonly) NSMutableDictionary<NSString*, ZADownloadMonitor*> *monitorIdToDownloadMonitorDownloading;
-@property (strong, nonatomic, readonly) NSMutableDictionary<NSString*, ZADownloadMonitor*> *monitorIdToDownloadMonitorPause;
+@property (strong, nonatomic, readonly) NSMutableDictionary<NSString*, ZADownloadCallback*> *callBackIdToCallBackDownloading;
+@property (strong, nonatomic, readonly) NSMutableDictionary<NSString*, ZADownloadCallback*> *callBackIdToCallBackPause;
 
 - (instancetype)init NS_UNAVAILABLE;
 
