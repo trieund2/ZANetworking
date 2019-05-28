@@ -45,12 +45,11 @@
     TrackDownload *track3 = [[TrackDownload alloc] initFromURLString:@"https://speed.hetzner.de/100MB.bin" trackName:@"Test file 100MB"];
     TrackDownload *track4 = [[TrackDownload alloc] initFromURLString:@"https://speed.hetzner.de/100MB.bin" trackName:@"Test file 100MB"];
     TrackDownload *track5 = [[TrackDownload alloc] initFromURLString:@"https://speed.hetzner.de/1GB.bin" trackName:@"Test file 1GB"];
+    TrackDownload *track6 = [[TrackDownload alloc] initFromURLString:@"https://download.microsoft.com/download/8/7/D/87D36A01-1266-4FD3-924C-1F1F958E2233/Office2010DevRefs.exe" trackName:@"Test file 50MB microsoft"];
+    TrackDownload *track7 = [[TrackDownload alloc] initFromURLString:@"https://download.microsoft.com/download/B/1/7/B1783FE9-717B-4F78-A39A-A2E27E3D679D/ENU/x64/spPowerPivot16.msi" trackName:@"Test file 100MB microsoft"];
+    TrackDownload *track8 = [[TrackDownload alloc] initFromURLString:@"https://download.microsoft.com/download/8/b/2/8b2347d9-9f9f-410b-8436-616f89c81902/WindowsServer2003.WindowsXP-KB914961-SP2-x64-ENU.exe" trackName:@"Test file 350MB microsoft"];
 
-    [self.trackDownloads addObject:track1];
-    [self.trackDownloads addObject:track2];
-    [self.trackDownloads addObject:track3];
-    [self.trackDownloads addObject:track4];
-    [self.trackDownloads addObject:track5];
+    [self.trackDownloads addObjectsFromArray:@[track1, track2, track3, track4, track5, track6, track7, track8]];
     
     [self.downloadTableView reloadData];
 }
