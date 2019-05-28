@@ -320,7 +320,7 @@ expectedTotalBytes:(int64_t)expectedTotalBytes {
     __weak typeof(self) weakSelf = self;
     
     dispatch_async(self.root_queue, ^{
-        if (error) {
+        if (error && error.code != NSURLErrorCancelled) {
             ZATaskInfo *taskInfo = [weakSelf.taskIdToTaskInfo objectForKey:[NSNumber numberWithInteger:task.taskIdentifier]];
             for (NSString *callBackId in taskInfo.callBackIdToCallBackDownloading.allKeys) {
                 ZADownloadCallback *callBackDownloading = [taskInfo.callBackIdToCallBackDownloading objectForKey:callBackId];
