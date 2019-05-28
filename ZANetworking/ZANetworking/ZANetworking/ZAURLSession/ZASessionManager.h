@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "ZADownloadPriority.h"
 #import "ZADownloadCallback.h"
+#import "ZANetworkManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,7 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)resumeDownloadTaskByIdentifier:(NSString *)identifier;
 - (void)pauseDownloadTaskByIdentifier:(NSString *)identifier;
 - (void)cancelDownloadTaskByIdentifier:(NSString *)identifier;
-- (void)updateDownloadTaskPriority:(ZADownloadPriority)priority byIdentifier:(NSString *)identifier;
 
 @end
 
