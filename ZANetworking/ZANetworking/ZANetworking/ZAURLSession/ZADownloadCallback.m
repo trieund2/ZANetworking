@@ -30,6 +30,7 @@ pthread_mutex_t url_session_task_request_mutex = PTHREAD_MUTEX_INITIALIZER;
         _destinationBlock = destinationBlock;
         _completionBlock = completionBlock;
     }
+    
     return self;
 }
 
