@@ -20,7 +20,6 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    _progressView.progress = 0;
 }
 
 #pragma mark: - Interface methods
