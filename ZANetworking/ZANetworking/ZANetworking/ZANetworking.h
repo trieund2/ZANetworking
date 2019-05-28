@@ -11,5 +11,6 @@
 
 #import "ZADownloadPriority.h"
 #import "ZASessionManager.h"
+#import "ZASessionTaskStatus.h"
 
 #endif /* ZANetworking_h */

@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ZASessionTaskStatus.h"
+#import "ZANetworking.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,12 +18,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) NSProgress *progress;
 @property (nonatomic) ZASessionTaskStatus status;
 @property (nonatomic) NSString *identifier;
+@property (nonatomic) ZADownloadPriority priority;
 
 - (id)initFromURLString:(NSString *)urlString;
 
 - (id)initFromURLString:(NSString *)urlString trackName:(NSString *)name;
 
-- (BOOL)canChangeToStatus:(ZASessionTaskStatus)status;
+- (id)initFromURLString:(NSString *)urlString trackName:(NSString *)name priority:(ZADownloadPriority)priority;
 
 @end
 
