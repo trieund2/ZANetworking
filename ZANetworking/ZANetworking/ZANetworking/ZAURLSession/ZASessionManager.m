@@ -12,7 +12,6 @@
 @interface ZASessionManager ()
 @property (readonly, nonatomic) NSURLSession *session;
 @property (readonly, nonatomic) dispatch_queue_t root_queue;
-@property (readonly, nonatomic) NSOperationQueue *sessionDelegateQueue;
 @property (readonly, nonatomic) NSMutableDictionary<NSURLRequest*, ZATaskInfo*> *urlRequestToTaskInfo;
 @property (readonly, nonatomic) NSMutableDictionary<NSString*, ZATaskInfo*> *callbackIdToTaskInfo;
 @property (readonly, nonatomic) NSMutableDictionary<NSNumber*, ZATaskInfo*> *taskIdToTaskInfo;
@@ -40,14 +39,12 @@
     self = [super init];
     if (self) {
         _root_queue = dispatch_queue_create("com.za.zanetworking.sessionmanager.rootqueue", DISPATCH_QUEUE_SERIAL);
-        _sessionDelegateQueue = [[NSOperationQueue alloc] init];
-        _sessionDelegateQueue.maxConcurrentOperationCount = 1;
         _callbackIdToTaskInfo = [[NSMutableDictionary alloc] init];
         _taskIdToTaskInfo = [[NSMutableDictionary alloc] init];
         _urlRequestToTaskInfo = [[NSMutableDictionary alloc] init];
         _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]
                                                  delegate:self
-                                            delegateQueue:_sessionDelegateQueue];
+                                            delegateQueue:nil];
     }
     
     return self;
