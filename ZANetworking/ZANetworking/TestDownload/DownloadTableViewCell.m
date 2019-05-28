@@ -20,7 +20,6 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    
 }
 
 #pragma mark: - Interface methods
@@ -32,8 +31,11 @@
     
     if (trackDownload.progress.totalUnitCount != 0) {
         CGFloat progress = (CGFloat)trackDownload.progress.completedUnitCount / (CGFloat)trackDownload.progress.totalUnitCount;
-        [self.progressView setProgress:progress];
+        self.progressView.progress = progress;
         self.percentDownloadLabel.text = [NSString stringWithFormat:@"%0.1f%%", progress * 100];
+    } else {
+        self.progressView.progress = 0;
+        self.percentDownloadLabel.text = @"0%";
     }
     
     [self.pauseButton setTitle:@"Pause" forState:(UIControlStateNormal)];

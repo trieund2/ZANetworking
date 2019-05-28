@@ -20,8 +20,8 @@
         _downloadTask = downloadTask;
         _resumeData = NULL;
         _status = ZASessionTaskStatusInitialized;
-        _monitorIdToDownloadMonitorDownloading = [[NSMutableDictionary alloc] init];
-        _monitorIdToDownloadMonitorPause = [[NSMutableDictionary alloc] init];
+        _callBackIdToCallBackDownloading = [[NSMutableDictionary alloc] init];
+        _callBackIdToCallBackPause = [[NSMutableDictionary alloc] init];
         _completeFileLocation = NULL;
         _originalRequest = originalRequest;
     }
