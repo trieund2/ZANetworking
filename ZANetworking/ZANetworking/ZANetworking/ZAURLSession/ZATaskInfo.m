@@ -25,6 +25,7 @@
         _completeFileLocation = NULL;
         _originalRequest = originalRequest;
     }
+    
     return self;
 }
 
@@ -47,9 +48,9 @@
 }
 
 - (void)changeStatusTo:(ZASessionTaskStatus)status {
-//#if DEBUG
-//    NSAssert([self canChangeToStatus:status], @"Error: Status can not be changed");
-//#endif
+#if DEBUG
+    NSAssert([self canChangeToStatus:status], @"Error: Status can not be changed");
+#endif
     if (![self canChangeToStatus:status]) { return; }
     _status = status;
 }
