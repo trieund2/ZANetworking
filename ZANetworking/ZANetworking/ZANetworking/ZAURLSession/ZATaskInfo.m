@@ -38,7 +38,7 @@
             return (status == ZASessionTaskStatusPaused) || (status == ZASessionTaskStatusSuccessed) || (status == ZASessionTaskStatusCancelled) || (status == ZASessionTaskStatusFailed);
             
         case ZASessionTaskStatusPaused:
-            return (status == ZASessionTaskStatusRunning) || (status == ZASessionTaskStatusSuccessed) || (status == ZASessionTaskStatusCancelled);
+            return (status == ZASessionTaskStatusRunning) || (status == ZASessionTaskStatusSuccessed) || (status == ZASessionTaskStatusCancelled) || (status == ZASessionTaskStatusFailed);
             
         case ZASessionTaskStatusSuccessed:
         case ZASessionTaskStatusCancelled:

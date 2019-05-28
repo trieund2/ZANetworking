@@ -129,6 +129,7 @@
         });
     }];
     
+    trackDownload.progress = [[NSProgress alloc] init];
     trackDownload.identifier = identifier;
     trackDownload.status = ZASessionTaskStatusRunning;
     self.currentDownload[identifier] = trackDownload;
