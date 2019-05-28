@@ -116,7 +116,7 @@
     TrackDownload *trackDownload = [self.trackDownloads objectAtIndex:indexPath.row];
     if (nil == trackDownload) { return; }
     
-    [ZASessionManager.sharedManager pauseDownloadTaskByDownloadMonitorId:trackDownload.identifier];
+    [ZASessionManager.sharedManager pauseDownloadTaskByIdentifier:trackDownload.identifier];
     trackDownload.status = ZASessionTaskStatusPaused;
     
     [self.downloadTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:(UITableViewRowAnimationNone)];
@@ -126,7 +126,7 @@
     TrackDownload *trackDownload = [self.trackDownloads objectAtIndex:indexPath.row];
     if (nil == trackDownload) { return; }
     
-    [ZASessionManager.sharedManager resumeDownloadTaskByDownloadMonitorId:trackDownload.identifier];
+    [ZASessionManager.sharedManager resumeDownloadTaskByIdentifier:trackDownload.identifier];
     trackDownload.status = ZASessionTaskStatusRunning;
     [self.downloadTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:(UITableViewRowAnimationNone)];
 }
@@ -135,7 +135,7 @@
     TrackDownload *trackDownload = [self.trackDownloads objectAtIndex:indexPath.row];
     if (nil == trackDownload) { return; }
     
-    [ZASessionManager.sharedManager cancelDownloadTaskByMonitorId:trackDownload.identifier];
+    [ZASessionManager.sharedManager cancelDownloadTaskByIdentifier:trackDownload.identifier];
     trackDownload.status = ZASessionTaskStatusCancelled;
     [self.downloadTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:(UITableViewRowAnimationNone)];
 }

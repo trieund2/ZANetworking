@@ -12,7 +12,7 @@ typedef void (^ZAURLSessionTaskProgressBlock)(NSProgress *);
 typedef NSURL * (^ZAURLSessionDownloadTaskDestinationBlock)(NSURL *location);
 typedef void (^ZAURLSessionTaskCompletionBlock)(NSURLResponse *response, NSError *error);
 
-@interface ZADownloadMonitor : NSObject
+@interface ZADownloadCallback : NSObject
 
 @property (copy, nonatomic, readonly) NSString *identifier;
 @property (copy, nonatomic, readonly) ZAURLSessionTaskProgressBlock progressBlock;

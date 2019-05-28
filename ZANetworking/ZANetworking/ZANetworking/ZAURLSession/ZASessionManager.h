@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ZADownloadPriority.h"
-#import "ZADownloadMonitor.h"
+#import "ZADownloadCallback.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -23,9 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
                        destinationBlock:(ZAURLSessionDownloadTaskDestinationBlock)destinationBlock
                         completionBlock:(ZAURLSessionTaskCompletionBlock)completionBloc;
 
-- (void)resumeDownloadTaskByDownloadMonitorId:(NSString *)monitorId;
-- (void)pauseDownloadTaskByDownloadMonitorId:(NSString *)monitorId;
-- (void)cancelDownloadTaskByMonitorId:(NSString *)monitorId;
+- (void)resumeDownloadTaskByIdentifier:(NSString *)identifier;
+- (void)pauseDownloadTaskByIdentifier:(NSString *)identifier;
+- (void)cancelDownloadTaskByIdentifier:(NSString *)identifier;
 
 @end
 
