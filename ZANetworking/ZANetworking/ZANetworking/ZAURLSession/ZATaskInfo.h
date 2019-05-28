@@ -40,6 +40,12 @@
  */
 - (void)changeStatusTo:(ZASessionTaskStatus)status;
 
+/**
+ * @abstract Update priority of callbacks by its identifier.
+ * @discussion This might results in change of task's priority but not sure, because there might be other callbacks point to the task but with different priority. ZATaskInfo will listen to these changes and choose the highest priority of downloading callbacks to assign to task's priority.
+ * @param priority Priority to update.
+ * @param identifier Identifier of download callback.
+ */
 - (void)updateCallbackPriority:(ZADownloadPriority)priority byIdentifier:(NSString *)identifier;
 
 @end
