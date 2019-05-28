@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "ZADownloadPriority.h"
 #import "ZADownloadCallback.h"
+#import "ZANetworkManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

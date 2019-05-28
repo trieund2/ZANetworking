@@ -255,7 +255,17 @@
 }
 
 - (NSTimeInterval)getTimeoutInterval {
-    return 500.0;
+    NetworkStatus status = ZANetworkManager.sharedInstance.currentNetworkStatus;
+    switch (status) {
+        case ReachableViaWiFi:
+            return 15;
+            
+        case ReachableViaWWAN:
+            return 30;
+            
+        case NotReachable:
+            return 0;
+    }
 }
 
 #pragma mark - NSURLSessionDownloadDelegate
